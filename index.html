@@ -449,7 +449,7 @@
                 if (rrp != 0 && qty > 0 && gp < 0) return; // Skip if transaction is a transfer or write-off
                 if (code.includes("-NOADDON") || code.includes("-ADD-VO")) return; // Skip if the transaction is a 'no addon' line or a VOIP/VOLTE addon // will need adjustment
 
-                if (rrp == 0) qty *= -1; // If it's a plan, invert the quantity
+                if (rrp == 0 && !row['Product Group'].includes("Top Up")) qty *= -1; // If it's a plan, invert the quantity
 
                 // Create a new line on the report for each new rep
                 if (report[rep] == null) {
