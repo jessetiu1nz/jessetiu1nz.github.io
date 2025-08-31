@@ -236,7 +236,7 @@
     <div class="page-container">
         <header>
             <h1>Jesse's Toolkit</h1>
-            <h3>v 1.3</h3>
+            <h3>v 1.4</h3>
             <button id="modalBtn" class="button">HELP</button>
         </header>
         <div id="modal" class="modal">
@@ -268,7 +268,7 @@
             <button id="screenshotBtn" style="position: absolute; font-size: 1em;" hidden class="button">🗐</button>
             <div id="capture" style="display: inline-block">
                 <table id="report-table"></table>
-                <p id="copyright" hidden>Jesse's Toolkit v1.3</p>
+                <p id="copyright" hidden>Jesse's Toolkit v1.4</p>
             </div>
         </section>
         <footer>Created by Jesse Tiu 2025. <a href="mailto:jesse.tiu@one.nz">jesse.tiu@one.nz</a></footer>
@@ -323,35 +323,51 @@
                 "subHeadings": ["p2p", "rs", "ict"]
             }, {
                 "heading": "Other",
-                "subHeadings": ["dev", "accs", "trend", "bills", "topup", "pp"
-                    // , "com"
-                    // , "plangp", "devgp"
-                ]
+                "subHeadings": ["dev", "accs", "trend", "bills", "topup", "pp", "com"]
             }
         ];
 
-        const commission = { // Commission calculations aren't currently working accurately
+        const commission = { // Taken from most recent One Rate Card (Sept 2025)
+
+            // Only these four metrics need calculating, as the report generated has the com amt in the gp field
             dev: 0.05, // device (as a %)
             gm: 0.1, // gen merch (as a %)
+            pp: 2, // prepay (including travel)
             oneup: 5, // one upgrade
 
-            fbb: 12.5, // fixed broadband
-            fbbrs: 6.25, // fixed broadband resign
-            wbb: 18.75, // wireless broadband
-            wbbrs: 9.5, // wireless broadband resign
 
-            pp: 2, // prepay (including travel)
+            fbb: 13, // consumer fixed broadband
+            fbbrs: 6.5, // consumer fixed broadband resign
+            busifbb: 20, // business fixed broadband
+            busifbbrs: 6.5, // business fixed broadband resign
+            wbb: 13, // wireless broadband
+            wbbrs: 6.5, // wireless broadband resign
 
-            companion: 5, // companion plan
-            companionrs: 2.5, // companion plan resign
+            companion: 7.5, // companion plan
+            companionrs: 0, // companion plan resign
+            p2p: 3, // postpay entry
 
             // endless data plans 
-            edsmall: 5,
-            edsmallrs: 2.5,
-            edmedium: 10,
-            edmediumrs: 5,
-            edlarge: 15,
-            edlargers: 7.5
+            edsmall: 4,
+            edsmallrs: 1,
+            edmedium: 7.5,
+            edmediumrs: 1,
+            edlarge: 12,
+            edlargers: 5,
+            oneplan: 20,
+            oneplanrs: 7,
+
+            // Business/ICT
+            tollfree: 10,
+            webex: 10,
+            multitxt: 15,
+            saas: 5, // M365 and Business Trend Micro
+            mcd: 5, // IoT Managed Connectivity Data
+            payg: 2, // IoT Pay as you Go Data Plan
+            assets: 10, // IoT Asset Management
+
+            watch: 5, // Apple or Samsung Watch
+
         };
 
         let sortColumn = 'gp'; // Change this variable to change the row sort. Currently set to gp.
@@ -468,8 +484,7 @@
                         report[rep].com += gp;
                         report[rep].plangp += gp * 5;
                         break;
-                    case 'ConsPP Voice Smart Data': // Consumer P2P
-                    case 'ConsPP Voice Smart Data PPN':
+                    case 'ConsPP Voice Smart Data PPN': // Consumer P2P
                         report[rep].p2p += qty;
                         report[rep].gp += gp * 5;
                         report[rep].com += gp;
@@ -492,8 +507,7 @@
                         report[rep].com += gp;
                         report[rep].plangp += gp * 5;
                         break;
-                    case 'BussPP Voice Smart Data': // Business P2P
-                    case 'BussPP Voice Smart Data PPN':
+                    case 'BussPP Voice Smart Data PPN': // Business P2P
                         report[rep].p2p += qty;
                         report[rep].gp += gp * 5;
                         report[rep].com += gp;
@@ -509,15 +523,12 @@
 
                     // Consumer FAB / BATs
                     case 'ConsNC FAB HM BB': // Consumer FAB New
-                    case 'ConsNC FAB HM FL': // - might be able to get rid of this line
-                    case 'ConsNC HPW HPW': // - might be able to get rid of this line
                         report[rep].cfab += qty;
                         report[rep].gp += gp * 5;
                         report[rep].com += gp;
                         report[rep].plangp += gp * 5;
                         break;
                     case 'ConsRS FAB HM BB': // Consumer FAB Resign
-                    case 'ConsRS FAB HM FL':
                         report[rep].rs += qty;
                         report[rep].gp += gp * 5;
                         report[rep].com += gp;
@@ -553,7 +564,7 @@
                     case 'CST Device':
                         report[rep].dev += qty;
                         report[rep].gp += gp;
-                        report[rep].com += commission.dev * gp;
+                        report[rep].com += commission.dev * gp + commission.watch * qty;
                         report[rep].devgp += gp;
                         break;
 
@@ -562,7 +573,6 @@
                     case 'Bluetooth Headset':
                     case 'Cases':
                     case 'Chargers':
-                    case 'CST Accessories':
                     case 'Entertainment and Gaming':
                     case 'Holders/Cradles':
                     case 'Memory':
@@ -574,7 +584,7 @@
                         report[rep].com += commission.gm * gp;
                         break;
 
-                    // Trend - counts towards GM (currently doesn't count towards gm qty count)
+                    // Trend - counts towards GM (but not accessory qty)
                     case 'Antivirus 1 Year Subscription':
                     case 'Antivirus 2 Year Subscription':
                     case 'Antivirus 3 Year Subscription':
@@ -600,7 +610,7 @@
                         }
                         if (code == 'IFP-COMM') {  // OnePlan S25U or 16PM on IFP gives $50 extra GP. Doesn't count as plan GP so shouldn't be multiplied by 5.
                             report[rep].gp += gp;
-                            report[rep].com += commission.dev;
+                            report[rep].com += gp;
                         }
                         break;
 
@@ -610,7 +620,6 @@
                     case 'Prepay Mobile Top Up':
                     case 'Prepay Direct Top Up':
                         report[rep].topup += qty;
-                        // report[rep].gp += gp;
                         break;
 
                     // Bill payments - don't count towards GP
@@ -618,12 +627,13 @@
                         report[rep].bills -= qty; // Bill payments end up as negative cos they have 0 GP and look like plans
                         break;
 
-                    // Everything else that can be ignored
-                    case '':
-                    case 'MDP': // These are IFP roundoffs (couple of cents per transaction from IFP calculations)
+                    // These are IFP roundoffs (couple of cents per transaction from IFP calculations)
+                    case 'MDP':
                         report[rep].gp += gp;
                         break;
 
+                    // Everything else that can be ignored
+                    case '':
                     case 'Unspecified':
                     case 'Plan Kits':
                     case 'Promotional Phone Rebate':
@@ -637,9 +647,9 @@
                     case 'Service Fee':
                         break;
 
-                    // If it's something unaccounted for, print to console
+                    // If it's something unaccounted for, show error message
                     default:
-                        console.log('Could not process transaction: ' + row['Product Group']);
+                        alert('Please contact the developer with the following error:\n\nCould not process product group: ' + row['Product Group']);
                         break;
                 }
             });
