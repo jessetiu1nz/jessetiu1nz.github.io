@@ -608,9 +608,8 @@
                             report[rep].oneup += qty;
                             report[rep].com += qty * commission.oneup;
                         }
-                        if (code == 'IFP-COMM') {  // OnePlan S25U or 16PM on IFP gives $50 extra GP. Doesn't count as plan GP so shouldn't be multiplied by 5.
-                            report[rep].gp += gp;
-                            report[rep].com += gp;
+                        if (code == 'IFP-COMM') {  // This line shows up on Sisense calculations, but is not part of commission. We need to revisit this at a later date.
+                            report[rep].gp += gp * 5;
                         }
                         break;
 
@@ -821,4 +820,5 @@
 </body>
 
 </html>
+
 
