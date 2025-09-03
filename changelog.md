@@ -1,6 +1,12 @@
 # Changelog | Jesse's Toolkit
 ## 1.4
 *2025-09-01*
+- Bug fixed: "Watch calculations are being added to devices."
+- Changed calculations:
+    - Removed $50 IFP-COMM line from commission column.
+    - Multiplied $50 IFP-COMM by 5 for GP column to be closer to Sisense.
+    - We expect to revisit this in the future when Sisense is retired.
+*2025-09-01*
 - Bug fixed: "Watches are not being calculated."
 - Added: Changelog page - found at jessetiu1nz.github.io/changelog
 - Removed: Secondary page for commissions.
