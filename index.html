@@ -302,9 +302,7 @@
             topup: "Top-ups",
             bills: "Bills",
 
-            com: "Commission",
-            plangp: "Plan Margin",
-            devgp: "Handset Margin"
+            com: "Commission"
         };
 
         const headers = [ // Change these to change the headers.
@@ -372,7 +370,7 @@
 
         let sortColumn = 'gp'; // Change this variable to change the row sort. Currently set to gp.
 
-        const dollarValues = ["gp", "gm", "com", "plangp", "devgp"];
+        const dollarValues = ["gp", "gm", "com"];
 
 
         let rawData = [];
@@ -561,11 +559,13 @@
                     case 'Live HSDPA':
                     case 'Business HSDPA':
                     case 'Tablet':
+                        report[rep].dev += qty;
+                        report[rep].gp += gp;
+                        break;
                     case 'CST Device':
                         report[rep].dev += qty;
                         report[rep].gp += gp;
                         report[rep].com += commission.dev * gp + commission.watch * qty;
-                        report[rep].devgp += gp;
                         break;
 
                     // Accessories - counts towards GM
@@ -821,3 +821,4 @@
 </body>
 
 </html>
+
