@@ -1,6 +1,6 @@
 # Changelog | Jesse's Toolkit
 ## 1.4
-*2025-09-01*
+*2025-09-03*
 - Bug fixed: "Watch calculations are being added to devices."
 - Changed calculations:
     - Removed $50 IFP-COMM line from commission column.
