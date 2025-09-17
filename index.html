@@ -549,7 +549,7 @@
 
                     // ICT // Don't include GP but the GP column contains the commission
                     case 'BussNC ICT':
-                        report[rep].ict += qty;
+                        report[rep].ict -= qty;
                         report[rep].com += gp;
                         break;
 
@@ -820,5 +820,6 @@
 </body>
 
 </html>
+
 
 
