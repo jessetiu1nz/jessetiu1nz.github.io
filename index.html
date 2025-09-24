@@ -534,13 +534,13 @@
                         break;
 
                     // Business FABs
-                    case 'BussNC FAB WK BB': // Business FAB New
+                    case 'BussNC FAB HM BB': // Business FAB New
                         report[rep].bfab += qty;
                         report[rep].gp += gp * 5;
                         report[rep].com += gp;
                         report[rep].plangp += gp * 5;
                         break;
-                    case 'BussRS FAB WK BB': // Business FAB Resigns
+                    case 'BussRS FAB HM BB': // Business FAB Resigns
                         report[rep].rs += qty;
                         report[rep].gp += gp * 5;
                         report[rep].com += gp;
@@ -569,6 +569,7 @@
                         break;
 
                     // Accessories - counts towards GM
+                    case 'CST Accessories':
                     case 'Adapters':
                     case 'Bluetooth Headset':
                     case 'Bundles':
@@ -821,6 +822,7 @@
 </body>
 
 </html>
+
 
 
 
