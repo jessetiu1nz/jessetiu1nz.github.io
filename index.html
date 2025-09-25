@@ -535,12 +535,14 @@
 
                     // Business FABs
                     case 'BussNC FAB HM BB': // Business FAB New
+                    case 'BussNC FAB WK BB':
                         report[rep].bfab += qty;
                         report[rep].gp += gp * 5;
                         report[rep].com += gp;
                         report[rep].plangp += gp * 5;
                         break;
                     case 'BussRS FAB HM BB': // Business FAB Resigns
+                    case 'BussRS FAB WK BB':
                         report[rep].rs += qty;
                         report[rep].gp += gp * 5;
                         report[rep].com += gp;
@@ -822,6 +824,7 @@
 </body>
 
 </html>
+
 
 
 
