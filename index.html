@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jesse's Toolkit</title>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.mini.min.js"></script>
     <style>
         /* Color definitions */
         :root {
@@ -132,77 +133,77 @@
             display: none;
         }
 
-        #report-table {
+        #kpi-table {
             border-collapse: collapse;
             text-align: center;
             cursor: default;
             margin: 5px;
         }
 
-        #report-table th,
+        #kpi-table th,
         td {
             padding: 0.5em;
         }
 
-        #report-table thead,
-        #report-table tfoot {
+        #kpi-table thead,
+        #kpi-table tfoot {
             color: var(--white);
         }
 
-        #report-table th,
-        #report-table tbody,
-        #report-table tfoot {
+        #kpi-table th,
+        #kpi-table tbody,
+        #kpi-table tfoot {
             /* Borders */
             border: 2px solid var(--white);
         }
 
-        #report-table thead tr:first-child {
+        #kpi-table thead tr:first-child {
             /* Main Headers */
             background-color: var(--grey900);
         }
 
-        #report-table thead tr:nth-child(2) {
+        #kpi-table thead tr:nth-child(2) {
             /* Sub Headers */
             background-color: var(--green600);
         }
 
-        #report-table thead tr:nth-child(2) :hover {
+        #kpi-table thead tr:nth-child(2) :hover {
             /* Sub Headers */
             background-color: var(--grey600);
             cursor: pointer;
         }
 
-        #report-table tbody tr:nth-child(odd) {
+        #kpi-table tbody tr:nth-child(odd) {
             /* Odd rows */
             background-color: var(--green50);
         }
 
-        #report-table tbody tr:nth-child(even) {
+        #kpi-table tbody tr:nth-child(even) {
             /* Even rows */
             background-color: var(--green100);
         }
 
-        #report-table tfoot {
+        #kpi-table tfoot {
             /* Totals row */
             background-color: var(--green400);
             font-weight: bold;
         }
 
-        #report-table .rep {
+        #kpi-table .rep {
             text-align: left;
         }
 
-        #report-table .currency {
+        #kpi-table .currency {
             text-align: right;
         }
 
-        #report-table th:first-child,
-        #report-table td:first-child {
+        #kpi-table th:first-child,
+        #kpi-table td:first-child {
             padding-left: 1em;
         }
 
-        #report-table th:last-child,
-        #report-table td:last-child {
+        #kpi-table th:last-child,
+        #kpi-table td:last-child {
             padding-right: 1em;
         }
 
@@ -214,6 +215,13 @@
 
         #screenshotBtn:hover {
             background-color: var(--green100);
+        }
+
+        #simswap {
+            width: fit-content;
+            padding: 1em;
+            border: 1px var(--green900);
+            border-style: solid;
         }
 
         #copyright {
@@ -236,7 +244,7 @@
     <div class="page-container">
         <header>
             <h1>Jesse's Toolkit</h1>
-            <h3>v 1.4</h3>
+            <h3 class="version"></h3>
             <button id="modalBtn" class="button">HELP</button>
         </header>
         <div id="modal" class="modal">
@@ -260,21 +268,251 @@
         <section>
             <p>
                 <label class="button">
-                    <input type="file" id="file-input" accept=".tsv, .csv" title="">
-                    UPLOAD FILE
+                    <input type="file" id="file-input" accept=".tsv, .csv, .ods" title="">
+                    UPLOAD SALES REPORT
                 </label>
                 <span id="file-selected" style="margin-left: 1em;"></span>
             </p>
-            <button id="screenshotBtn" style="position: absolute; font-size: 1em;" hidden class="button">🗐</button>
-            <div id="capture" style="display: inline-block">
-                <table id="report-table"></table>
-                <p id="copyright" hidden>Jesse's Toolkit v1.4</p>
+            <div id="kpi" hidden>
+                <button id="screenshotBtn" style="position: absolute; font-size: 1em;" hidden class="button">🗐</button>
+                <div id="capture" style="display: inline-block">
+                    <table id="kpi-table"></table>
+                    <p id="copyright" hidden>Jesse's Toolkit <span class="version"></span></p>
+                </div>
             </div>
+            <div id="loan-audit" hidden>
+                <h3>Oops - here's a sneak peak as to what's coming next in Jesse's Toolkit!</h3>
+                <input type="text" id="scan" placeholder="Scan device">
+                <h2>Available Devices</h2>
+                <table id="loan-available">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>IMEI</th>
+                            <th>Name</th>
+                            <th>Scanned</th>
+                            <th>Condition</th>
+                            <th>(action required)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="av-tbody"></tbody>
+                </table>
+                <h2>Allocated Devices</h2>
+                <table id="loan-allocated">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>IMEI</th>
+                            <th>Name</th>
+                            <th>Scanned</th>
+                            <th>Contract due date</th>
+                            <th>(action required)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="al-tbody"></tbody>
+                </table>
+            </div>
+            <div id="simswap">
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <h2>SIM Swap Template Maker</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Full Name:</td>
+                        <td><input type="text" oninput="nameChg(this.value)"></td>
+                    </tr>
+                    <tr>
+                        <td>Contact person:</td>
+                        <td>
+                            <label for="accholder"><input type="radio" name="contact" id="accholder"
+                                    onclick="contactChg('accholder')">Account
+                                Holder</label>
+                            <label for="authcontact"><input type="radio" name="contact" id="authcontact"
+                                    onclick="contactChg('authcontact')">Authorised Contact (account
+                                holder has been contacted)</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ID Type:</td>
+                        <td>
+                            <select name="idtype" id="idtype" onchange="idtypeChg(this.value)">
+                                <option value="" disabled selected>- Select ID -</option>
+                                <option value="nzdl">NZ Drivers Licence</option>
+                                <option value="nzpp">NZ Passport</option>
+                                <option value="auspp">Australian Passport</option>
+                                <option value="otherpp">Overseas Passport</option>
+                                <option value="nzbc">NZ Birth Certificate & Bank Statement (1 month)</option>
+                                <option value="coi">Certificate of Identity</option>
+                                <option value="kac">Kiwi Access Card & Bank Statement (1 month)
+                                </option>
+                                <option value="18p">18+ Card & Bank Statement (1 month)</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ID'd by:</td>
+                        <td>
+                            <label for="pin"><input type="radio" name="pin" id="pin" onclick="pinChg('pin')">PIN</label>
+                            <label for="secq"><input type="radio" name="pin" id="secq" onclick="pinChg('secq')">Security
+                                Questions</label>
+                            <label for="otp"><input type="radio" name="pin" id="otp" onclick="pinChg('otp')">OTP</label>
+                        </td>
+                    </tr>
+                    <tr id="secquestions" hidden>
+                        <td>
+                            <label for="oa"><input type="radio" name="questiontoggle" id="oa" onclick="secqChg('oa')"
+                                    checked>On
+                                account</label><br>
+                            <label for="pp"><input type="radio" name="questiontoggle" id="pp"
+                                    onclick="secqChg('pp')">Prepay</label>
+                        </td>
+                        <td>
+                            <label class="oaq"><input type="checkbox" onchange="editTemplate()" value="Tenure">How long
+                                have you
+                                had this mobile number/connection?<br></label>
+                            <label class="oaq"><input type="checkbox" onchange="editTemplate()"
+                                    value="Num called last 2 days">Can
+                                you tell me a number that you have called in the last 2 days and they have
+                                answered.<br></label>
+                            <label class="oaq"><input type="checkbox" onchange="editTemplate()"
+                                    value="Payment Method">What method
+                                do you usually use to pay your account?<br></label>
+                            <label class="oaq"><input type="checkbox" onchange="editTemplate()"
+                                    value="Most recent payment on account">What was the most recent payment amount on
+                                your
+                                account?<br></label>
+                            <label class="oaq"><input type="checkbox" onchange="editTemplate()"
+                                    value="Last call to One NZ/Details of Call">When did you last call us and what did
+                                you
+                                discuss?</label>
+
+                            <label class="ppq" hidden><input type="checkbox" onchange="editTemplate()"
+                                    value="Last topup date & value">When did you last top up your number and what was
+                                the top up
+                                value?<br></label>
+                            <label class="ppq" hidden><input type="checkbox" onchange="editTemplate()"
+                                    value="Last 4 Digits Credit Card">What are the last four digits of the credit card
+                                registered on
+                                your ‘My One NZ’ account (if you have one) or on your account<br></label>
+                            <label class="ppq" hidden><input type="checkbox" onchange="editTemplate()"
+                                    value="Monthly Bundle-Min/Data/Txt">What is your monthly bundle of minutes, txt’s
+                                and
+                                data?<br></label>
+                            <label class="ppq" hidden><input type="checkbox" onchange="editTemplate()"
+                                    value="Tenure">How long have
+                                you had this mobile number/connection?<br></label>
+                            <label class="ppq" hidden><input type="checkbox" onchange="editTemplate()"
+                                    value="Num called last 2 days">Can you tell me a number that you have called in the
+                                last 2 days
+                                and they have answered.</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Swap reason:</td>
+                        <td><input type="text" oninput="reasonChg(this.value)"></td>
+                    </tr>
+                    <tr>
+                        <td>Approved by:</td>
+                        <td><input type="text" oninput="approverChg(this.value)"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><textarea disabled id="template" rows="10" cols="80">
+Full name:
+Acc Holder/Auth Contact:
+ID Type:
+ID'd by:
+Swap reason:
+Approved by:
+                        </textarea><br>
+                            Character count: <span id="charcount">79</span>/250<span id="seccount"></span><br><br>
+                            <button id="copytext" onclick="copyToClipboard()" disabled>Copy to clipboard</button>
+
+                        </td>
+
+                    </tr>
+                </table>
+                <br>
+
+            </div>
+            <pre id="output"></pre>
         </section>
         <footer>Created by Jesse Tiu 2025. <a href="mailto:jesse.tiu@one.nz">jesse.tiu@one.nz</a></footer>
     </div>
     <script>
-        // JS Code
+
+        // Version Info
+        const version = "v2.0";
+        const versionElements = document.getElementsByClassName("version");
+        for (let i = 0; i < versionElements.length; i++) {
+            const v = document.createTextNode(version);
+            versionElements[i].appendChild(v);
+        }
+
+        // Tutorial Modal
+        var modal = document.getElementById("modal");
+        var btn = document.getElementById("modalBtn");
+        var span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function () {
+            modal.style.display = 'block';
+        }
+
+        span.onclick = function () {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // File input
+        document.getElementById("file-input").addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                switch (file.type) {
+                    case "text/csv": // If file is CSV, output KPI report
+                        document.getElementById("kpi").hidden = false;
+                        document.getElementById("loan-audit").hidden = true;
+                        reader.onload = function (e) {
+                            const text = e.target.result;
+                            rawData = readTSV(text);
+
+                            getRawReport(rawData);
+                            displayTable(prepareReport()); // Run the script
+                        };
+                        reader.readAsText(file);
+                        break;
+                    case "application/vnd.oasis.opendocument.spreadsheet": // If file is ODS, output Loan Audit
+                        document.getElementById("kpi").hidden = true;
+                        document.getElementById("loan-audit").hidden = false;
+                        reader.onload = function (e) {
+                            const data = new Uint8Array(e.target.result);
+                            const workbook = XLSX.read(data, { type: 'array' });
+
+                            // Get the first sheet name
+                            const sheetName = workbook.SheetNames[0];
+
+                            // Get the data from the first sheet
+                            const sheet = workbook.Sheets[sheetName];
+                            const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+                            displayAudit(jsonData);
+                        }
+                        reader.readAsArrayBuffer(file);
+                        break;
+                }
+                document.getElementById("simswap").hidden = true;
+            }
+        });
+    </script>
+    <script>
+        // ------------------------------------------------------------------------------------------------------------------------------
+        // KPI TRACKER
 
         // Fields that may want to be changed
 
@@ -388,41 +626,6 @@
             return subHeadings;
         }
 
-        // Tutorial Modal
-        var modal = document.getElementById("modal");
-        var btn = document.getElementById("modalBtn");
-        var span = document.getElementsByClassName("close")[0];
-
-        btn.onclick = function () {
-            modal.style.display = 'block';
-        }
-
-        span.onclick = function () {
-            modal.style.display = 'none';
-        }
-
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        // File input
-        document.getElementById("file-input").addEventListener("change", function (event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const text = e.target.result;
-                    rawData = readTSV(text);
-
-                    getRawReport(rawData);
-                    displayTable(prepareReport()); // Run the script
-                };
-                reader.readAsText(file);
-            }
-        });
-
         // When downloading a CSV report from the reporting portal, it actually comes in a tsv, not a csv. So process it as a tsv.
         function readTSV(tsvText) {
             const rows = tsvText.split("\n").map(row => row.split("\t"));
@@ -534,15 +737,13 @@
                         break;
 
                     // Business FABs
-                    case 'BussNC FAB HM BB': // Business FAB New
-                    case 'BussNC FAB WK BB':
+                    case 'BussNC FAB WK BB': // Business FAB New
                         report[rep].bfab += qty;
                         report[rep].gp += gp * 5;
                         report[rep].com += gp;
                         report[rep].plangp += gp * 5;
                         break;
-                    case 'BussRS FAB HM BB': // Business FAB Resigns
-                    case 'BussRS FAB WK BB':
+                    case 'BussRS FAB WK BB': // Business FAB Resigns
                         report[rep].rs += qty;
                         report[rep].gp += gp * 5;
                         report[rep].com += gp;
@@ -713,7 +914,7 @@
 
         // Create the html table
         function displayTable(data) {
-            const table = document.getElementById("report-table");
+            const table = document.getElementById("kpi-table");
             table.innerHTML = "";
 
             if (!Object.keys(data).length) return; // If there's no data, do nothing
@@ -805,7 +1006,7 @@
 
         // Position screenshot button
         function positionScreenBtn() {
-            const ref = document.getElementById('report-table');
+            const ref = document.getElementById('kpi-table');
             const float = document.getElementById('screenshotBtn');
             const rect = ref.getBoundingClientRect();
 
@@ -820,13 +1021,285 @@
             document.getElementById('file-selected').innerText = this.files[0]?.name;
         }
     </script>
+    <script>
+        // -------------------------------------------------------------------------------------------------------------------------
 
+        // Loan Phone Audit
+
+        var available = [];
+        var allocated = [];
+
+        // Event listener for scanner
+        document.getElementById("scan").addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                const scanned = document.getElementById("scan");
+
+                let device = available.find(d => d['Serial#'] == scanned.value) || allocated.find(d => d['Serial#'] == scanned.value);
+                if (!device) {
+                    if (scanned.value) { console.log("Scanned IMEI not found"); }
+                } else {
+                    document.getElementById(scanned.value).innerText = "Yes";
+                }
+
+                scanned.value = "";
+            }
+        });
+
+        function displayAudit(jsonData) {
+            available = [];
+            allocated = [];
+            jsonData.forEach(device => {
+                if (device.Availability == "Available") {
+                    available.push(device);
+                } else if (device.Availability == "Allocated") {
+                    allocated.push(device);
+                } else {
+                    console.log("Could not find availability for device:" + device);
+                }
+            });
+
+            const avTableBody = document.getElementById('av-tbody');
+            avTableBody.innerHTML = "";
+            available.forEach(a => {
+                const id = a["Serial#"];
+                const tr = document.createElement('tr');
+
+                const item = document.createElement('td');
+                item.textContent = a["Item"];
+                tr.appendChild(item);
+
+                const imei = document.createElement('td');
+                imei.textContent = id;
+                tr.appendChild(imei);
+
+                const name = document.createElement('td');
+                name.textContent = a["Serial Description"];
+                tr.appendChild(name);
+
+                const scanned = document.createElement('td');
+                scanned.textContent = "No";
+                scanned.id = id;
+                tr.appendChild(scanned);
+
+                const condition = document.createElement('td');
+                const usable = document.createElement('input');
+                usable.type = "radio";
+                usable.id = `g${id}`;
+                usable.name = `gb${id}`;
+                usable.value = `g${id}`;
+                const usableLabel = document.createElement('label');
+                usableLabel.htmlFor = `g${id}`;
+                usableLabel.innerText = "Usable";
+                const unusable = document.createElement('input');
+                unusable.type = "radio";
+                unusable.id = `b${id}`;
+                unusable.name = `gb${id}`;
+                unusable.value = `b${id}`;
+                const unusableLabel = document.createElement('label');
+                unusableLabel.htmlFor = `b${id}`;
+                unusableLabel.innerText = "Unusable";
+                condition.appendChild(usable);
+                condition.appendChild(usableLabel);
+                condition.appendChild(unusable);
+                condition.appendChild(unusableLabel);
+                tr.appendChild(condition)
+
+                avTableBody.appendChild(tr);
+            });
+
+            const alTableBody = document.getElementById('al-tbody');
+            alTableBody.innerHTML = "";
+            allocated.forEach(a => {
+                const id = a["Serial#"];
+                const tr = document.createElement('tr');
+
+                const item = document.createElement('td');
+                item.textContent = a["Item"];
+                tr.appendChild(item);
+
+                const imei = document.createElement('td');
+                imei.textContent = id;
+                tr.appendChild(imei);
+
+                const name = document.createElement('td');
+                name.textContent = a["Serial Description"];
+                tr.appendChild(name);
+
+                const scanned = document.createElement('td');
+                scanned.textContent = "No";
+                scanned.id = id;
+                tr.appendChild(scanned);
+
+                const date = document.createElement('td');
+                const datePicker = document.createElement('input');
+                datePicker.type = "date";
+                date.id = `d${id}`;
+                date.appendChild(datePicker);
+                tr.appendChild(date);
+
+                alTableBody.appendChild(tr);
+            });
+
+            // // Display the data
+            // document.getElementById('output').textContent = JSON.stringify(available, null, 2);
+            // document.getElementById('output').textContent += JSON.stringify(allocated, null, 2);
+        }
+    </script>
+    <script>
+        // -------------------------------------------------------------------------------------------------------------------------
+
+        // SIM Swap template form
+
+        var name = "";
+        var contact = "";
+        var idtype = "";
+        var idby = "";
+        const secquestions = document.getElementById("secquestions");
+        const questiontoggle = document.getElementsByClassName("questiontoggle");
+        const secqs = document.querySelectorAll(".oaq, .ppq");
+        var reason = "";
+        var approver = "";
+        var template = document.getElementById("template");
+        var charcount = document.getElementById("charcount");
+
+        function nameChg(val) {
+            name = val;
+            editTemplate();
+        }
+
+        function contactChg(val) {
+            contact = val;
+            editTemplate();
+        }
+
+        function idtypeChg(val) {
+            idtype = val;
+            editTemplate();
+        }
+
+        function pinChg(val) {
+            idby = val;
+            if (val == "pin" || val == "otp") {
+                secquestions.hidden = true;
+                Array.from(secqs).forEach(q => {
+                    q.firstElementChild.checked = false;
+                });
+            } else {
+                secquestions.hidden = false;
+            }
+            editTemplate();
+        }
+
+        function reasonChg(val) {
+            reason = val;
+            editTemplate();
+        }
+
+        function approverChg(val) {
+            approver = val;
+            editTemplate();
+        }
+
+        function secqChg(val) {
+            Array.from(secqs).forEach(q => {
+                if (val == "oa" && q.className == "oaq") {
+                    q.hidden = false;
+                } else if (val == "pp" && q.className == "ppq") {
+                    q.hidden = false;
+                } else {
+                    q.hidden = true;
+                }
+                q.firstElementChild.checked = false;
+            });
+            editTemplate();
+        }
+
+        function editTemplate() {
+            let t = template.innerHTML;
+            let n = name;
+            let c = "";
+            if (contact == "accholder") {
+                c = "Acc Holder";
+            } else if (contact == "authcontact") {
+                c = `Auth Contact\nAcc Holder Contacted:Y`;
+            }
+            let idt = "";
+            switch (idtype) {
+                case "nzdl":
+                    idt = "NZDL";
+                    break;
+                case "nzpp":
+                    idt = "NZ Passport";
+                    break;
+                case "auspp":
+                    idt = "Aus Passport";
+                    break;
+                case "otherpp":
+                    idt = "Overseas Passport";
+                    break;
+                case "nzbc":
+                    idt = "Birth cert & bank statement";
+                    break;
+                case "coi":
+                    idt = "Cert of identity";
+                    break;
+                case "kac":
+                    idt = "Kiwi Access & bank statement";
+                    break;
+                case "18p":
+                    idt = "18+ & bank statement";
+                    break;
+            }
+            let sqs = "";
+            Array.from(secqs).forEach(q => {
+                if (q.firstElementChild.checked) {
+                    if (sqs != "") { sqs += ", "; }
+                    sqs += q.firstElementChild.value;
+                }
+            });
+            let idb = "";
+            if (idby == "pin") {
+                idb = "PIN";
+            } else if (idby == "otp") {
+                idb = "OTP";
+            } else if (idby == "secq") {
+                idb = `Sec Qs\nQs asked:${sqs}`;
+            }
+
+            let r = reason;
+            let a = approver;
+            t = `Full name:${n}\nAcc Holder/Auth Contact:${c}\nID Type:${idt}\nID'd by:${idb}\nSwap reason:${r}\nApproved by:${a}`;
+            template.value = t;
+
+            charcount.innerText = template.value.length;
+
+            const b = document.getElementById("copytext");
+            const sqc = document.getElementById("seccount");
+
+            let e = true;
+            if (!n || !c || !idt || !idb || !r || !a) e = false;
+            if (idby == "secq") {
+                let scount = 0;
+                Array.from(secqs).forEach(q => {
+                    if (q.firstElementChild.checked) {
+                        scount += 1;
+                    }
+                })
+                if (scount < 2) {
+                    e = false;
+                }
+                sqc.innerText = ` | Question count: ${scount}/2`;
+            } else {
+                sqc.innerText = "";
+            }
+            b.disabled = !e;
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(template.value)
+                .catch(err => alert("Failed to copy text: " + err));
+        }
+    </script>
 </body>
 
 </html>
-
-
-
-
-
-
