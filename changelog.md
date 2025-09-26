@@ -1,5 +1,13 @@
 # Changelog | Jesse's Toolkit
+## 2.0
+*2025-09-26*
+- SIM Swap template added!
+
 ## 1.4
+*2025-09-25*
+- Bug fixed: "CST Accessories not registered."
+*2025-09-19*
+- Bug fixed: "Bundles not registered."
 *2025-09-03*
 - Bug fixed: "Watch calculations are being added to devices."
 - Changed calculations:
