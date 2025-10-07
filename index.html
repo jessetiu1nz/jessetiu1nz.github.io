@@ -217,6 +217,10 @@
             background-color: var(--green100);
         }
 
+        /* Loan Phone Audit */
+
+
+        /* SIM Swap template */
         #simswap {
             width: fit-content;
             padding: 1em;
@@ -292,7 +296,8 @@
                             <th>Name</th>
                             <th>Scanned</th>
                             <th>Condition</th>
-                            <th>(action required)</th>
+                            <th>Action required</th>
+                            <th>Notes / action taken</th>
                         </tr>
                     </thead>
                     <tbody id="av-tbody"></tbody>
@@ -304,13 +309,15 @@
                             <th>Item</th>
                             <th>IMEI</th>
                             <th>Name</th>
-                            <th>Scanned</th>
-                            <th>Contract due date</th>
-                            <th>(action required)</th>
+                            <th>Contract in store</th>
+                            <th>Due date</th>
+                            <th>Action required</th>
+                            <th>Notes / action taken</th>
                         </tr>
                     </thead>
                     <tbody id="al-tbody"></tbody>
                 </table>
+                <input type="button" value="Download report" onclick="downloadLoanReport()">
             </div>
             <div id="simswap">
                 <table>
@@ -330,9 +337,13 @@
                                     onclick="contactChg('accholder')">Account
                                 Holder</label>
                             <label for="authcontact"><input type="radio" name="contact" id="authcontact"
-                                    onclick="contactChg('authcontact')">Authorised Contact (account
-                                holder has been contacted)</label>
+                                    onclick="contactChg('authcontact')">Authorised contact</label>
                         </td>
+                    </tr>
+                    <tr id="contacted" hidden>
+                        <td></td>
+                        <td><label for="ahcontacted"><input type="checkbox" name="ahcontacted" id="ahcontacted"
+                                    onclick="contactedChg()">Account holder contacted</label></td>
                     </tr>
                     <tr>
                         <td>ID Type:</td>
@@ -357,7 +368,8 @@
                             <label for="pin"><input type="radio" name="pin" id="pin" onclick="pinChg('pin')">PIN</label>
                             <label for="secq"><input type="radio" name="pin" id="secq" onclick="pinChg('secq')">Security
                                 Questions</label>
-                            <label for="otp"><input type="radio" name="pin" id="otp" onclick="pinChg('otp')">OTP (Prepay only)</label>
+                            <label for="otp"><input type="radio" name="pin" id="otp" onclick="pinChg('otp')">OTP (Prepay
+                                only)</label>
                         </td>
                     </tr>
                     <tr id="secquestions" hidden>
@@ -1028,6 +1040,9 @@ Approved by:
 
         var available = [];
         var allocated = [];
+        var avObjects = {};
+        var alObjects = {};
+        const date = new Date().toLocaleDateString('en-NZ');
 
         // Event listener for scanner
         document.getElementById("scan").addEventListener("keydown", function (event) {
@@ -1082,29 +1097,53 @@ Approved by:
                 tr.appendChild(scanned);
 
                 const condition = document.createElement('td');
-                const usable = document.createElement('input');
-                usable.type = "radio";
-                usable.id = `g${id}`;
-                usable.name = `gb${id}`;
-                usable.value = `g${id}`;
-                const usableLabel = document.createElement('label');
-                usableLabel.htmlFor = `g${id}`;
-                usableLabel.innerText = "Usable";
-                const unusable = document.createElement('input');
-                unusable.type = "radio";
-                unusable.id = `b${id}`;
-                unusable.name = `gb${id}`;
-                unusable.value = `b${id}`;
-                const unusableLabel = document.createElement('label');
-                unusableLabel.htmlFor = `b${id}`;
-                unusableLabel.innerText = "Unusable";
-                condition.appendChild(usable);
-                condition.appendChild(usableLabel);
-                condition.appendChild(unusable);
-                condition.appendChild(unusableLabel);
-                tr.appendChild(condition)
+                const conditionDropdown = document.createElement('select');
+                conditionDropdown.id = `c${id}`;
+                conditionDropdown.onchange = function () { changeAction(id) }
+                const condDefault = document.createElement('option');
+                condDefault.value = "";
+                condDefault.disabled = true;
+                condDefault.defaultSelected = true;
+                condDefault.innerText = "- Select condition -";
+                conditionDropdown.appendChild(condDefault);
+                const good = document.createElement('option');
+                good.value = "good";
+                good.innerText = "Good condition";
+                conditionDropdown.appendChild(good);
+                const damaged = document.createElement('option');
+                damaged.value = "damaged";
+                damaged.innerText = "Damaged by customer";
+                conditionDropdown.appendChild(damaged);
+                const lost = document.createElement('option');
+                lost.value = "lost";
+                lost.innerText = "Unusable or lost";
+                conditionDropdown.appendChild(lost);
+                condition.appendChild(conditionDropdown);
+                tr.appendChild(condition);
+
+                const actionreq = document.createElement('td');
+                actionreq.id = `ar${id}`;
+                tr.appendChild(actionreq);
+
+                const actiontaken = document.createElement('td');
+                actiontaken.id = `at${id}`;
+                const comment = document.createElement('input');
+                comment.type = "text";
+                comment.id = `note${id}`;
+                actiontaken.appendChild(comment);
+                tr.appendChild(actiontaken);
 
                 avTableBody.appendChild(tr);
+
+                avObjects[id] = {
+                    "id": id,
+                    "item": a["Item"],
+                    "name": a["Serial Description"],
+                    "scanned": false,
+                    "condition": null,
+                    "actionreq": "",
+                    "actiontaken": ""
+                };
             });
 
             const alTableBody = document.getElementById('al-tbody');
@@ -1125,10 +1164,30 @@ Approved by:
                 name.textContent = a["Serial Description"];
                 tr.appendChild(name);
 
-                const scanned = document.createElement('td');
-                scanned.textContent = "No";
-                scanned.id = id;
-                tr.appendChild(scanned);
+                const contract = document.createElement('td');
+                const contractDropdown = document.createElement('select');
+                contractDropdown.id = `c${id}`;
+                contractDropdown.onchange = function () { changeAction(id) }
+                const contDefault = document.createElement('option');
+                contDefault.value = "";
+                contDefault.disabled = true;
+                contDefault.defaultSelected = true;
+                contDefault.innerText = "- Select option -";
+                contractDropdown.appendChild(contDefault);
+                const inStore = document.createElement('option');
+                inStore.value = "instore";
+                inStore.innerText = "Contract is in store";
+                contractDropdown.appendChild(inStore);
+                const phAlloc = document.createElement('option');
+                phAlloc.value = "phoneallocated";
+                phAlloc.innerText = "Phone is in store";
+                contractDropdown.appendChild(phAlloc);
+                const noContract = document.createElement('option');
+                noContract.value = "nocontract";
+                noContract.innerText = "Missing phone and contract";
+                contractDropdown.appendChild(noContract);
+                contract.appendChild(contractDropdown);
+                tr.appendChild(contract);
 
                 const date = document.createElement('td');
                 const datePicker = document.createElement('input');
@@ -1137,12 +1196,94 @@ Approved by:
                 date.appendChild(datePicker);
                 tr.appendChild(date);
 
+
+                const actionreq = document.createElement('td');
+                actionreq.id = `ar${id}`;
+                tr.appendChild(actionreq);
+
+                const actiontaken = document.createElement('td');
+                actiontaken.id = `at${id}`;
+                const comment = document.createElement('input');
+                comment.type = "text";
+                comment.id = `note${id}`;
+                actiontaken.appendChild(comment);
+                tr.appendChild(actiontaken);
+
                 alTableBody.appendChild(tr);
+
+                alObjects[id] = {
+                    "id": id,
+                    "item": a["Item"],
+                    "name": a["Serial Description"],
+                    "contract": null,
+                    "duedate": null,
+                    "actionreq": "",
+                    "actiontaken": ""
+                };
             });
 
+            function changeAction(id) {
+                var td = document.getElementById(`ar${id}`);
+                var value = document.getElementById(`c${id}`).value;
+                switch (value) {
+                    case 'good':
+                        td.innerText = "No action required";
+                        break;
+                    case 'damaged':
+                        td.innerText = "Charge customer and contact Retail Ops";
+                        break;
+                    case 'lost':
+                        td.innerText = "Contact Retail Ops to remove";
+                        break;
+                    case 'instore':
+                        td.innerText = "Select due date";
+                        break;
+                    case 'phoneallocated':
+                        td.innerText = "Return device in Pronto";
+                        break;
+                    case 'nocontract':
+                        td.innerText = "Investigation needed";
+                        break;
+                    default:
+                        td.innerText = "";
+                }
+                if (avObjects[id]) {
+                    avObjects[id].actionreq = td.innerText;
+                } else if (alObjects[id]) {
+                    alObjects[id].actionreq = td.innerText;
+                }
+            }
             // // Display the data
             // document.getElementById('output').textContent = JSON.stringify(available, null, 2);
             // document.getElementById('output').textContent += JSON.stringify(allocated, null, 2);
+
+        }
+        function downloadLoanReport() {
+            let fileContent = "";
+            const title = "Loan Phone Audit";
+
+            const available = document.getElementById('loan-available');
+            const allocated = document.getElementById('loan-allocated');
+
+
+            let avStr = "";
+            Array.from(available.rows).forEach((row, rowIndex) => {
+                Array.from(row.cells).forEach((cell, cellIndex) => {
+                    avStr += cell.value + '\t';
+                })
+                avStr += '\n';
+            });
+
+            let alStr = "";
+            Array.from(allocated.rows).forEach((row, rowIndex) => {
+                Array.from(row.cells).forEach((cell, cellIndex) => {
+                    alStr += cell.textContent + '\t';
+                })
+                alStr += '\n';
+            });
+
+            fileContent += `${title} - ${date}\n${avStr}\n${alStr}`;
+            console.log(fileContent);
         }
     </script>
     <script>
@@ -1152,6 +1293,7 @@ Approved by:
 
         var name = "";
         var contact = "";
+        var contacted = false;
         var idtype = "";
         var idby = "";
         const secquestions = document.getElementById("secquestions");
@@ -1169,6 +1311,18 @@ Approved by:
 
         function contactChg(val) {
             contact = val;
+            if (contact == 'accholder') {
+                document.getElementById("contacted").hidden = true;
+                document.getElementById("ahcontacted").checked = false;
+                contacted = false;
+            } else if (contact == 'authcontact') {
+                document.getElementById("contacted").hidden = false;
+            }
+            editTemplate();
+        }
+
+        function contactedChg() {
+            contacted = document.getElementById("ahcontacted").checked;
             editTemplate();
         }
 
@@ -1221,7 +1375,10 @@ Approved by:
             if (contact == "accholder") {
                 c = "Acc Holder";
             } else if (contact == "authcontact") {
-                c = `Auth Contact\nAcc Holder Contacted:Y`;
+                c = `Auth Contact\nAcc Holder Contacted:`;
+                if (contacted) {
+                    c += "Y";
+                }
             }
             let idt = "";
             switch (idtype) {
@@ -1278,6 +1435,7 @@ Approved by:
 
             let e = true;
             if (!n || !c || !idt || !idb || !r || !a) e = false;
+            if (contact == "authcontact" && !contacted) e = false;
             if (idby == "secq") {
                 let scount = 0;
                 Array.from(secqs).forEach(q => {
@@ -1303,4 +1461,3 @@ Approved by:
 </body>
 
 </html>
-
