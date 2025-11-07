@@ -221,7 +221,8 @@
 
 
         /* SIM Swap template */
-        #simswap {
+        #simswap,
+        #sr {
             width: fit-content;
             padding: 1em;
             border: 1px var(--green900);
@@ -249,76 +250,16 @@
         <header>
             <h1>Jesse's Toolkit</h1>
             <h3 class="version"></h3>
-            <button id="modalBtn" class="button">HELP</button>
         </header>
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>How to run Jesse's Toolkit</h2>
-                <ol>
-                    <li>Log in to Pronto.</li>
-                    <li>Go to Reporting Portal.</li>
-                    <li>Open the 'Sales - Sales and Profit by Product Group' report.</li>
-                    <li>Select the store warehouse and edit dates if required.</li>
-                    <li>Click Finish and wait for the report to run.</li>
-                    <li>At the top of the page, click on the play button and select Run as CSV. The file will download.
-                    </li>
-                    <li>On Jesse's Toolkit, click on Upload File and select the downloaded file.</li>
-                    <li>Click on a header to order by that header. Click on the copy icon to copy the report to the
-                        clipboard.</li>
-                </ol>
-            </div>
+        <div id="tabs">
+            <p>
+                <button onclick="changeMode('sim')">SIM Swap Template</button>
+                <button onclick="changeMode('sr')">SR Template</button>
+                <button onclick="changeMode('kpi')">KPI Report</button>
+                <!-- <button onclick="changeMode('loan')">Loan Audit</button> -->
+            </p>
         </div>
         <section>
-            <p>
-                <label class="button">
-                    <input type="file" id="file-input" accept=".tsv, .csv, .ods" title="">
-                    UPLOAD SALES REPORT
-                </label>
-                <span id="file-selected" style="margin-left: 1em;"></span>
-            </p>
-            <div id="kpi" hidden>
-                <button id="screenshotBtn" style="position: absolute; font-size: 1em;" hidden class="button">🗐</button>
-                <div id="capture" style="display: inline-block">
-                    <table id="kpi-table"></table>
-                    <p id="copyright" hidden>Jesse's Toolkit <span class="version"></span></p>
-                </div>
-            </div>
-            <div id="loan-audit" hidden>
-                <h3>Oops - here's a sneak peak as to what's coming next in Jesse's Toolkit!</h3>
-                <input type="text" id="scan" placeholder="Scan device">
-                <h2>Available Devices</h2>
-                <table id="loan-available">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>IMEI</th>
-                            <th>Name</th>
-                            <th>Scanned</th>
-                            <th>Condition</th>
-                            <th>Action required</th>
-                            <th>Notes / action taken</th>
-                        </tr>
-                    </thead>
-                    <tbody id="av-tbody"></tbody>
-                </table>
-                <h2>Allocated Devices</h2>
-                <table id="loan-allocated">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>IMEI</th>
-                            <th>Name</th>
-                            <th>Contract in store</th>
-                            <th>Due date</th>
-                            <th>Action required</th>
-                            <th>Notes / action taken</th>
-                        </tr>
-                    </thead>
-                    <tbody id="al-tbody"></tbody>
-                </table>
-                <input type="button" value="Download report" onclick="downloadLoanReport()">
-            </div>
             <div id="simswap">
                 <table>
                     <tr>
@@ -335,7 +276,7 @@
                         <td>
                             <label for="accholder"><input type="radio" name="contact" id="accholder"
                                     onclick="contactChg('accholder')">Account
-                                Holder</label>
+                                holder</label>
                             <label for="authcontact"><input type="radio" name="contact" id="authcontact"
                                     onclick="contactChg('authcontact')">Authorised contact</label>
                         </td>
@@ -374,28 +315,28 @@
                     </tr>
                     <tr id="secquestions" hidden>
                         <td>
-                            <label for="oa"><input type="radio" name="questiontoggle" id="oa" onclick="secqChg('oa')"
-                                    checked>On
+                            <label for="oa"><input type="radio" name="questiontoggle" id="oa" onclick="secqChg('oa')">On
                                 account</label><br>
                             <label for="pp"><input type="radio" name="questiontoggle" id="pp"
                                     onclick="secqChg('pp')">Prepay</label>
                         </td>
                         <td>
-                            <label class="oaq"><input type="checkbox" onchange="editTemplate()" value="Tenure">How long
+                            <label class="oaq" hidden><input type="checkbox" onchange="editTemplate()"
+                                    value="Tenure">How long
                                 have you
                                 had this mobile number/connection?<br></label>
-                            <label class="oaq"><input type="checkbox" onchange="editTemplate()"
+                            <label class="oaq" hidden><input type="checkbox" onchange="editTemplate()"
                                     value="Num called last 2 days">Can
                                 you tell me a number that you have called in the last 2 days and they have
                                 answered.<br></label>
-                            <label class="oaq"><input type="checkbox" onchange="editTemplate()"
+                            <label class="oaq" hidden><input type="checkbox" onchange="editTemplate()"
                                     value="Payment Method">What method
                                 do you usually use to pay your account?<br></label>
-                            <label class="oaq"><input type="checkbox" onchange="editTemplate()"
+                            <label class="oaq" hidden><input type="checkbox" onchange="editTemplate()"
                                     value="Most recent payment on account">What was the most recent payment amount on
                                 your
                                 account?<br></label>
-                            <label class="oaq"><input type="checkbox" onchange="editTemplate()"
+                            <label class="oaq" hidden><input type="checkbox" onchange="editTemplate()"
                                     value="Last call to One NZ/Details of Call">When did you last call us and what did
                                 you
                                 discuss?</label>
@@ -437,7 +378,7 @@ ID Type:
 ID'd by:
 Swap reason:
 Approved by:
-                        </textarea><br>
+                            </textarea><br>
                             Character count: <span id="charcount">79</span>/250<span id="seccount"></span><br><br>
                             <button id="copytext" onclick="copyToClipboard()" disabled>Copy to clipboard</button>
 
@@ -445,88 +386,339 @@ Approved by:
 
                     </tr>
                 </table>
-                <br>
-
             </div>
+            <div id="sr" hidden>
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <h2>Service Request for Credit Adjustments</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Customer number:</td>
+                        <td><input type="text" oninput="sr_textUpdate()" id="sr_cxnum"></td>
+                    </tr>
+                    <tr>
+                        <td>Customer name:</td>
+                        <td><input type="text" oninput="sr_textUpdate()" id="sr_cxname"></td>
+                    </tr>
+                    <tr>
+                        <td>Complaint reference number:</td>
+                        <td><input type="text" oninput="sr_textUpdate()" id="sr_refnum"></td>
+                    </tr>
+                    <tr>
+                        <td>Total amount to be credited:</td>
+                        <td><input type="text" oninput="sr_textUpdate()" id="sr_amt"></td>
+                    </tr>
+                    <tr>
+                        <td>Breakdown/computation with respective<br>month of invoice and charge:</td>
+                        <td><input type="text" oninput="sr_textUpdate()" id="sr_breakdown"></td>
+                    </tr>
+                    <tr>
+                        <td>Reason for credit:</td>
+                        <td><input type="text" oninput="sr_textUpdate()" id="sr_reason"></td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2"><textarea disabled id="sr_textbox" rows="10" cols="80">
+Customer number:
+Customer name:
+Complaint reference number:
+Total amount to be credited:
+Breakdown/computation with respective month of invoice and charge:
+Reason for credit:
+                            </textarea><br>
+                            <span id="sr_charcount">Character count: 180/250</span><br><br>
+                            <button id="sr_copy2clipboard" onclick="sr_copy2clipboard()">Copy to clipboard</button>
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="kpi" hidden>
+                <p>
+                    <label class="button">
+                        <input type="file" id="kpi-input" accept=".tsv, .csv" title="">
+                        Upload Sales Report
+                    </label>
+                    <span id="file-selected" style="margin-left: 1em;"></span>
+                </p>
+                <button id="screenshotBtn" style="position: absolute; font-size: 1em;" hidden class="button">🗐</button>
+                <div id="capture" style="display: inline-block">
+                    <table id="kpi-table"></table>
+                    <p id="copyright" hidden>Jesse's Toolkit <span class="version"></span></p>
+                </div>
+            </div>
+            <div id="loan-audit" hidden>
+                <p>
+                    <label class="button">
+                        <input type="file" id="loan-input" accept=".ods" title="">
+                        Upload Loan Data
+                    </label>
+                    <span id="file-selected" style="margin-left: 1em;"></span>
+                </p>
+                <input type="text" id="scan" placeholder="Scan device">
+                <h2>Available Devices</h2>
+                <table id="loan-available">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Item</th>
+                            <th>IMEI</th>
+                            <th>Scanned</th>
+                            <th>Condition</th>
+                            <th>Action required</th>
+                            <th>Notes / action taken</th>
+                        </tr>
+                    </thead>
+                    <tbody id="av-tbody"></tbody>
+                </table>
+                <h2>Allocated Devices</h2>
+                <table id="loan-allocated">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Item</th>
+                            <th>IMEI</th>
+                            <th>Contract in store</th>
+                            <th>Due date</th>
+                            <th>Action required</th>
+                            <th>Notes / action taken</th>
+                        </tr>
+                    </thead>
+                    <tbody id="al-tbody"></tbody>
+                </table>
+                <input type="button" value="Download report" onclick="downloadLoanReport()">
+            </div>
+
             <pre id="output"></pre>
         </section>
         <footer>Created by Jesse Tiu 2025. <a href="mailto:jesse.tiu@one.nz">jesse.tiu@one.nz</a></footer>
     </div>
-    <script>
+    <script> // General
 
         // Version Info
-        const version = "v2.0";
+        const version = "v2.1";
         const versionElements = document.getElementsByClassName("version");
         for (let i = 0; i < versionElements.length; i++) {
             const v = document.createTextNode(version);
             versionElements[i].appendChild(v);
         }
 
-        // Tutorial Modal
-        var modal = document.getElementById("modal");
-        var btn = document.getElementById("modalBtn");
-        var span = document.getElementsByClassName("close")[0];
-
-        btn.onclick = function () {
-            modal.style.display = 'block';
+        // Tabs
+        function changeMode(mode) {
+            document.getElementById("simswap").hidden = (mode != 'sim');
+            document.getElementById("sr").hidden = (mode != 'sr');
+            document.getElementById("kpi").hidden = (mode != 'kpi');
+            document.getElementById("loan-audit").hidden = (mode != 'loan');
         }
 
-        span.onclick = function () {
-            modal.style.display = 'none';
-        }
-
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        // File input
-        document.getElementById("file-input").addEventListener("change", (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                switch (file.type) {
-                    case "text/csv": // If file is CSV, output KPI report
-                        document.getElementById("kpi").hidden = false;
-                        document.getElementById("loan-audit").hidden = true;
-                        reader.onload = function (e) {
-                            const text = e.target.result;
-                            rawData = readTSV(text);
-
-                            getRawReport(rawData);
-                            displayTable(prepareReport()); // Run the script
-                        };
-                        reader.readAsText(file);
-                        break;
-                    case "application/vnd.oasis.opendocument.spreadsheet": // If file is ODS, output Loan Audit
-                        document.getElementById("kpi").hidden = true;
-                        document.getElementById("loan-audit").hidden = false;
-                        reader.onload = function (e) {
-                            const data = new Uint8Array(e.target.result);
-                            const workbook = XLSX.read(data, { type: 'array' });
-
-                            // Get the first sheet name
-                            const sheetName = workbook.SheetNames[0];
-
-                            // Get the data from the first sheet
-                            const sheet = workbook.Sheets[sheetName];
-                            const jsonData = XLSX.utils.sheet_to_json(sheet);
-
-                            displayAudit(jsonData);
-                        }
-                        reader.readAsArrayBuffer(file);
-                        break;
-                }
-                document.getElementById("simswap").hidden = true;
-            }
-        });
     </script>
-    <script>
+    <script> // SIM Swap Template
+        // -------------------------------------------------------------------------------------------------------------------------
+        // SIM Swap template form
+
+        var name = "";
+        var contact = "";
+        var contacted = false;
+        var idtype = "";
+        var idby = "";
+        const secquestions = document.getElementById("secquestions");
+        const questiontoggle = document.getElementsByClassName("questiontoggle");
+        const secqs = document.querySelectorAll(".oaq, .ppq");
+        var reason = "";
+        var approver = "";
+        var template = document.getElementById("template");
+        var charcount = document.getElementById("charcount");
+
+        function nameChg(val) {
+            name = val;
+            editTemplate();
+        }
+
+        function contactChg(val) {
+            contact = val;
+            if (contact == 'accholder') {
+                document.getElementById("contacted").hidden = true;
+                document.getElementById("ahcontacted").checked = false;
+                contacted = false;
+            } else if (contact == 'authcontact') {
+                document.getElementById("contacted").hidden = false;
+            }
+            editTemplate();
+        }
+
+        function contactedChg() {
+            contacted = document.getElementById("ahcontacted").checked;
+            editTemplate();
+        }
+
+        function idtypeChg(val) {
+            idtype = val;
+            editTemplate();
+        }
+
+        function pinChg(val) {
+            idby = val;
+            if (val == "pin" || val == "otp") {
+                secquestions.hidden = true;
+                Array.from(secqs).forEach(q => {
+                    q.firstElementChild.checked = false;
+                });
+            } else {
+                secquestions.hidden = false;
+                Array.from(secqs).forEach(q => {
+                    q.hidden = true;
+                    q.firstElementChild.checked = false;
+                });
+                document.getElementById('oa').checked = false;
+                document.getElementById('pp').checked = false;
+            }
+            editTemplate();
+        }
+
+        function reasonChg(val) {
+            reason = val;
+            editTemplate();
+        }
+
+        function approverChg(val) {
+            approver = val;
+            editTemplate();
+        }
+
+        function secqChg(val) {
+            Array.from(secqs).forEach(q => {
+                if (val == "oa" && q.className == "oaq") {
+                    q.hidden = false;
+                } else if (val == "pp" && q.className == "ppq") {
+                    q.hidden = false;
+                } else {
+                    q.hidden = true;
+                }
+                q.firstElementChild.checked = false;
+            });
+            editTemplate();
+        }
+
+        function editTemplate() {
+            let t = template.innerHTML;
+            let n = name;
+            let c = "";
+            if (contact == "accholder") {
+                c = "Acc Holder";
+            } else if (contact == "authcontact") {
+                c = `Auth Contact\nAcc Holder Contacted:`;
+                if (contacted) {
+                    c += "Y";
+                }
+            }
+            let idt = "";
+            switch (idtype) {
+                case "nzdl":
+                    idt = "NZDL";
+                    break;
+                case "nzpp":
+                    idt = "NZ Passport";
+                    break;
+                case "auspp":
+                    idt = "Aus Passport";
+                    break;
+                case "otherpp":
+                    idt = "Overseas Passport";
+                    break;
+                case "nzbc":
+                    idt = "Birth cert & bank statement";
+                    break;
+                case "coi":
+                    idt = "Cert of identity";
+                    break;
+                case "kac":
+                    idt = "Kiwi Access & bank statement";
+                    break;
+                case "18p":
+                    idt = "18+ & bank statement";
+                    break;
+            }
+            let sqs = "";
+            Array.from(secqs).forEach(q => {
+                if (q.firstElementChild.checked) {
+                    if (sqs != "") { sqs += ", "; }
+                    sqs += q.firstElementChild.value;
+                }
+            });
+            let idb = "";
+            if (idby == "pin") {
+                idb = "PIN";
+            } else if (idby == "otp") {
+                idb = "OTP";
+            } else if (idby == "secq") {
+                idb = `Sec Qs\nQs asked:${sqs}`;
+            }
+
+            let r = reason;
+            let a = approver;
+            t = `Full name:${n}\nAcc Holder/Auth Contact:${c}\nID Type:${idt}\nID'd by:${idb}\nSwap reason:${r}\nApproved by:${a}`;
+            template.value = t;
+
+            charcount.innerText = template.value.length;
+
+            const b = document.getElementById("copytext");
+            const sqc = document.getElementById("seccount");
+
+            let e = true;
+            if (!n || !c || !idt || !idb || !r || !a) e = false;
+            if (contact == "authcontact" && !contacted) e = false;
+            if (idby == "secq") {
+                let scount = 0;
+                Array.from(secqs).forEach(q => {
+                    if (q.firstElementChild.checked) {
+                        scount += 1;
+                    }
+                })
+                if (scount < 2) {
+                    e = false;
+                }
+                sqc.innerText = ` | Question count: ${scount}/2`;
+            } else {
+                sqc.innerText = "";
+            }
+            b.disabled = !e;
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(template.value)
+                .catch(err => alert("Failed to copy text: " + err));
+        }
+    </script>
+    <script> // SR Template
+        //--------------------------------------------------------------------------------------------------
+
+        const sr_cxnum = document.getElementById("sr_cxnum");
+        const sr_cxname = document.getElementById("sr_cxname");
+        const sr_refnum = document.getElementById("sr_refnum");
+        const sr_amt = document.getElementById("sr_amt");
+        const sr_breakdown = document.getElementById("sr_breakdown");
+        const sr_reason = document.getElementById("sr_reason");
+        const sr_textbox = document.getElementById("sr_textbox");
+        const sr_charcount = document.getElementById("sr_charcount");
+
+        function sr_textUpdate() {
+            let sr_ref = "";
+            if (sr_refnum.value != "") { sr_ref = `Complaint reference number: ${sr_refnum.value}\n`; }
+            sr_textbox.value = `Customer number: ${sr_cxnum.value}\nCustomer name: ${sr_cxname.value}\n${sr_ref}Total amount to be credited: ${sr_amt.value}\nBreakdown/computation with respective month of invoice and charge: ${sr_breakdown.value}\nReason for credit: ${sr_reason.value}`;
+            sr_charcount.innerText = `Character count: ${sr_textbox.value.length}/250`;
+        }
+
+        function sr_copy2clipboard() {
+            navigator.clipboard.writeText(sr_textbox.value)
+                .catch(err => alert("Failed to copy text: " + err));
+        }
+
+    </script>
+    <script> // KPI Tracker Report
         // ------------------------------------------------------------------------------------------------------------------------------
         // KPI TRACKER
-
-        // Fields that may want to be changed
 
         // IDs of all the columns calculated
         const d = {
@@ -559,8 +751,7 @@ Approved by:
             {
                 "heading": "",
                 "subHeadings": ["rep"]
-            },
-            {
+            }, {
                 "heading": "Legends",
                 "subHeadings": ["coa", "boa", "cfab", "bfab", "oneup", "gm"]
             }, {
@@ -577,7 +768,7 @@ Approved by:
 
         const commission = { // Taken from most recent One Rate Card (Sept 2025)
 
-            // Only these four metrics need calculating, as the report generated has the com amt in the gp field
+            // Only these four metrics need calculating, as the report generated has the commission amount in the 'Shipped GP' field
             dev: 0.05, // device (as a %)
             gm: 0.1, // gen merch (as a %)
             pp: 2, // prepay (including travel)
@@ -615,13 +806,11 @@ Approved by:
             assets: 10, // IoT Asset Management
 
             watch: 5, // Apple or Samsung Watch
-
         };
 
-        let sortColumn = 'gp'; // Change this variable to change the row sort. Currently set to gp.
+        let sortColumn = 'gp'; // Default sort column
 
         const dollarValues = ["gp", "gm", "com"];
-
 
         let rawData = [];
         let processedData = {};
@@ -637,6 +826,22 @@ Approved by:
             });
             return subHeadings;
         }
+
+        // KPI sales input
+        document.getElementById("kpi-input").addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const text = e.target.result;
+                    rawData = readTSV(text);
+
+                    getRawReport(rawData);
+                    displayTable(prepareReport()); // Run the script
+                };
+                reader.readAsText(file);
+            }
+        });
 
         // When downloading a CSV report from the reporting portal, it actually comes in a tsv, not a csv. So process it as a tsv.
         function readTSV(tsvText) {
@@ -1033,41 +1238,78 @@ Approved by:
             document.getElementById('file-selected').innerText = this.files[0]?.name;
         }
     </script>
-    <script>
+    <script> // Loan Audit
         // -------------------------------------------------------------------------------------------------------------------------
 
         // Loan Phone Audit
+        var audit = {};
+        var today;
 
-        var available = [];
-        var allocated = [];
-        var avObjects = {};
-        var alObjects = {};
-        const date = new Date().toLocaleDateString('en-NZ');
+        // Loan audit input
+        document.getElementById("loan-input").addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                document.getElementById("kpi").hidden = true;
+                document.getElementById("loan-audit").hidden = false;
+                reader.onload = function (e) {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+
+                    // Get the first sheet name
+                    const sheetName = workbook.SheetNames[0];
+
+                    // Get the data from the first sheet
+                    const sheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+                    loadAudit(jsonData);
+                }
+                reader.readAsArrayBuffer(file);
+            }
+        });
 
         // Event listener for scanner
         document.getElementById("scan").addEventListener("keydown", function (event) {
             if (event.key === "Enter") {
                 const scanned = document.getElementById("scan");
 
-                let device = available.find(d => d['Serial#'] == scanned.value) || allocated.find(d => d['Serial#'] == scanned.value);
-                if (!device) {
-                    if (scanned.value) { console.log("Scanned IMEI not found"); }
+                if (audit.available[scanned.value]) {
+                    audit.available[scanned.value].scanned = true;
+                    document.getElementById(`s${scanned.value}`).innerText = "Yes";
+                } else if (audit.allocated[scanned.value]) {
+                    console.log("Scanned allocated phone");
                 } else {
-                    document.getElementById(scanned.value).innerText = "Yes";
+                    console.log("Scanned IMEI not found");
                 }
-
                 scanned.value = "";
             }
         });
 
-        function displayAudit(jsonData) {
-            available = [];
-            allocated = [];
+        function loadAudit(jsonData) {
+            today = new Date();
+            audit = { "available": {}, "allocated": {} };
+
             jsonData.forEach(device => {
+                let id = device['Serial#'];
                 if (device.Availability == "Available") {
-                    available.push(device);
+                    audit.available[id] = {
+                        "name": device['Serial Description'],
+                        "model": device['Item'],
+                        "scanned": false,
+                        "condition": null,
+                        "actionreq": null,
+                        "notes": ""
+                    }
                 } else if (device.Availability == "Allocated") {
-                    allocated.push(device);
+                    audit.allocated[id] = {
+                        "name": device['Serial Description'],
+                        "model": device['Item'],
+                        "condition": null,
+                        "duedate": null,
+                        "actionreq": null,
+                        "notes": ""
+                    }
                 } else {
                     console.log("Could not find availability for device:" + device);
                 }
@@ -1075,31 +1317,30 @@ Approved by:
 
             const avTableBody = document.getElementById('av-tbody');
             avTableBody.innerHTML = "";
-            available.forEach(a => {
-                const id = a["Serial#"];
+            Object.entries(audit.available).forEach(([id, data]) => {
                 const tr = document.createElement('tr');
 
+                const name = document.createElement('td');
+                name.textContent = data.name;
+                tr.appendChild(name);
+
                 const item = document.createElement('td');
-                item.textContent = a["Item"];
+                item.textContent = data.model;
                 tr.appendChild(item);
 
                 const imei = document.createElement('td');
                 imei.textContent = id;
                 tr.appendChild(imei);
 
-                const name = document.createElement('td');
-                name.textContent = a["Serial Description"];
-                tr.appendChild(name);
-
                 const scanned = document.createElement('td');
+                scanned.id = `s${id}`;
                 scanned.textContent = "No";
-                scanned.id = id;
                 tr.appendChild(scanned);
 
                 const condition = document.createElement('td');
                 const conditionDropdown = document.createElement('select');
                 conditionDropdown.id = `c${id}`;
-                conditionDropdown.onchange = function () { changeAction(id) }
+                conditionDropdown.onchange = function (event) { changePhCondition(id, event.target.value) }
                 const condDefault = document.createElement('option');
                 condDefault.value = "";
                 condDefault.disabled = true;
@@ -1129,45 +1370,36 @@ Approved by:
                 actiontaken.id = `at${id}`;
                 const comment = document.createElement('input');
                 comment.type = "text";
-                comment.id = `note${id}`;
+                comment.oninput = function (event) {
+                    audit.available[id].notes = event.target.value;
+                };
                 actiontaken.appendChild(comment);
                 tr.appendChild(actiontaken);
 
                 avTableBody.appendChild(tr);
-
-                avObjects[id] = {
-                    "id": id,
-                    "item": a["Item"],
-                    "name": a["Serial Description"],
-                    "scanned": false,
-                    "condition": null,
-                    "actionreq": "",
-                    "actiontaken": ""
-                };
             });
 
             const alTableBody = document.getElementById('al-tbody');
             alTableBody.innerHTML = "";
-            allocated.forEach(a => {
-                const id = a["Serial#"];
+            Object.entries(audit.allocated).forEach(([id, data]) => {
                 const tr = document.createElement('tr');
 
+                const name = document.createElement('td');
+                name.textContent = data.name;
+                tr.appendChild(name);
+
                 const item = document.createElement('td');
-                item.textContent = a["Item"];
+                item.textContent = data.model;
                 tr.appendChild(item);
 
                 const imei = document.createElement('td');
                 imei.textContent = id;
                 tr.appendChild(imei);
 
-                const name = document.createElement('td');
-                name.textContent = a["Serial Description"];
-                tr.appendChild(name);
-
                 const contract = document.createElement('td');
                 const contractDropdown = document.createElement('select');
                 contractDropdown.id = `c${id}`;
-                contractDropdown.onchange = function () { changeAction(id) }
+                contractDropdown.onchange = function (event) { changeConCondition(id, event.target.value) }
                 const contDefault = document.createElement('option');
                 contDefault.value = "";
                 contDefault.disabled = true;
@@ -1192,10 +1424,13 @@ Approved by:
                 const date = document.createElement('td');
                 const datePicker = document.createElement('input');
                 datePicker.type = "date";
+                datePicker.onchange = function (event) {
+                    audit.allocated[id].duedate = event.target.value;
+                    changeConCondition(id, document.getElementById(`c${id}`).value);
+                }
                 date.id = `d${id}`;
                 date.appendChild(datePicker);
                 tr.appendChild(date);
-
 
                 const actionreq = document.createElement('td');
                 actionreq.id = `ar${id}`;
@@ -1205,26 +1440,17 @@ Approved by:
                 actiontaken.id = `at${id}`;
                 const comment = document.createElement('input');
                 comment.type = "text";
-                comment.id = `note${id}`;
+                comment.oninput = function (event) {
+                    audit.allocated[id].notes = event.target.value;
+                };
                 actiontaken.appendChild(comment);
                 tr.appendChild(actiontaken);
 
                 alTableBody.appendChild(tr);
-
-                alObjects[id] = {
-                    "id": id,
-                    "item": a["Item"],
-                    "name": a["Serial Description"],
-                    "contract": null,
-                    "duedate": null,
-                    "actionreq": "",
-                    "actiontaken": ""
-                };
             });
 
-            function changeAction(id) {
+            function changePhCondition(id, value) {
                 var td = document.getElementById(`ar${id}`);
-                var value = document.getElementById(`c${id}`).value;
                 switch (value) {
                     case 'good':
                         td.innerText = "No action required";
@@ -1235,229 +1461,58 @@ Approved by:
                     case 'lost':
                         td.innerText = "Contact Retail Ops to remove";
                         break;
+                }
+                audit.available[id].condition = value;
+                audit.available[id].actionreq = td.innerText;
+            }
+
+            function changeConCondition(id, value) {
+                var artd = document.getElementById(`ar${id}`);
+                let diff = Math.round((new Date(audit.allocated[id].duedate) - today) / (1000 * 3600 * 24));
+
+                switch (value) {
                     case 'instore':
-                        td.innerText = "Select due date";
+                        if (!audit.allocated[id].duedate) {
+                            artd.innerText = "Select due date";
+                        } else if (diff > 0) {
+                            artd.innerText = "No action required";
+                        } else if (diff > -14) {
+                            artd.innerText = "Contact customer to return device.\nReissue loan if required.";
+                        } else {
+                            artd.innerText = "Contact customer to return device.\nBlacklist and charge customer after 3 days.";
+                        }
                         break;
                     case 'phoneallocated':
-                        td.innerText = "Return device in Pronto";
+                        artd.innerText = "Return device in Pronto";
                         break;
                     case 'nocontract':
-                        td.innerText = "Investigation needed";
+                        artd.innerText = "Investigation needed";
                         break;
-                    default:
-                        td.innerText = "";
                 }
-                if (avObjects[id]) {
-                    avObjects[id].actionreq = td.innerText;
-                } else if (alObjects[id]) {
-                    alObjects[id].actionreq = td.innerText;
-                }
+                audit.allocated[id].condition = value;
+                audit.allocated[id].actionreq = artd.innerText;
             }
-            // // Display the data
-            // document.getElementById('output').textContent = JSON.stringify(available, null, 2);
-            // document.getElementById('output').textContent += JSON.stringify(allocated, null, 2);
 
         }
+
         function downloadLoanReport() {
-            let fileContent = "";
-            const title = "Loan Phone Audit";
-
-            const available = document.getElementById('loan-available');
-            const allocated = document.getElementById('loan-allocated');
-
-
-            let avStr = "";
-            Array.from(available.rows).forEach((row, rowIndex) => {
-                Array.from(row.cells).forEach((cell, cellIndex) => {
-                    avStr += cell.value + '\t';
-                })
-                avStr += '\n';
+            let fileContent = `Loan Phone Audit,${today.toLocaleDateString('en-NZ')}\n`;
+            fileContent += "Available\n";
+            fileContent += "Name,Item,IMEI,Scanned,Condition,Action required,Notes / action taken\n";
+            Object.entries(audit.available).forEach(([id, av]) => {
+                fileContent += `${av.name},${av.model},${id},${av.scanned ? "Yes" : "No"},${av.condition},${av.actionreq},"${av.notes}"\n`;
             });
-
-            let alStr = "";
-            Array.from(allocated.rows).forEach((row, rowIndex) => {
-                Array.from(row.cells).forEach((cell, cellIndex) => {
-                    alStr += cell.textContent + '\t';
-                })
-                alStr += '\n';
+            fileContent += "Allocated\n";
+            fileContent += "Name,Item,IMEI,Condition,Due date,Action required,Notes / action taken\n";
+            Object.entries(audit.allocated).forEach(([id, al]) => {
+                fileContent += `${al.name},${al.model},${id},${al.condition},${al.duedate},${al.actionreq},"${al.notes}"\n`;
             });
-
-            fileContent += `${title} - ${date}\n${avStr}\n${alStr}`;
             console.log(fileContent);
+
+            console.log(audit);
         }
     </script>
-    <script>
-        // -------------------------------------------------------------------------------------------------------------------------
 
-        // SIM Swap template form
-
-        var name = "";
-        var contact = "";
-        var contacted = false;
-        var idtype = "";
-        var idby = "";
-        const secquestions = document.getElementById("secquestions");
-        const questiontoggle = document.getElementsByClassName("questiontoggle");
-        const secqs = document.querySelectorAll(".oaq, .ppq");
-        var reason = "";
-        var approver = "";
-        var template = document.getElementById("template");
-        var charcount = document.getElementById("charcount");
-
-        function nameChg(val) {
-            name = val;
-            editTemplate();
-        }
-
-        function contactChg(val) {
-            contact = val;
-            if (contact == 'accholder') {
-                document.getElementById("contacted").hidden = true;
-                document.getElementById("ahcontacted").checked = false;
-                contacted = false;
-            } else if (contact == 'authcontact') {
-                document.getElementById("contacted").hidden = false;
-            }
-            editTemplate();
-        }
-
-        function contactedChg() {
-            contacted = document.getElementById("ahcontacted").checked;
-            editTemplate();
-        }
-
-        function idtypeChg(val) {
-            idtype = val;
-            editTemplate();
-        }
-
-        function pinChg(val) {
-            idby = val;
-            if (val == "pin" || val == "otp") {
-                secquestions.hidden = true;
-                Array.from(secqs).forEach(q => {
-                    q.firstElementChild.checked = false;
-                });
-            } else {
-                secquestions.hidden = false;
-            }
-            editTemplate();
-        }
-
-        function reasonChg(val) {
-            reason = val;
-            editTemplate();
-        }
-
-        function approverChg(val) {
-            approver = val;
-            editTemplate();
-        }
-
-        function secqChg(val) {
-            Array.from(secqs).forEach(q => {
-                if (val == "oa" && q.className == "oaq") {
-                    q.hidden = false;
-                } else if (val == "pp" && q.className == "ppq") {
-                    q.hidden = false;
-                } else {
-                    q.hidden = true;
-                }
-                q.firstElementChild.checked = false;
-            });
-            editTemplate();
-        }
-
-        function editTemplate() {
-            let t = template.innerHTML;
-            let n = name;
-            let c = "";
-            if (contact == "accholder") {
-                c = "Acc Holder";
-            } else if (contact == "authcontact") {
-                c = `Auth Contact\nAcc Holder Contacted:`;
-                if (contacted) {
-                    c += "Y";
-                }
-            }
-            let idt = "";
-            switch (idtype) {
-                case "nzdl":
-                    idt = "NZDL";
-                    break;
-                case "nzpp":
-                    idt = "NZ Passport";
-                    break;
-                case "auspp":
-                    idt = "Aus Passport";
-                    break;
-                case "otherpp":
-                    idt = "Overseas Passport";
-                    break;
-                case "nzbc":
-                    idt = "Birth cert & bank statement";
-                    break;
-                case "coi":
-                    idt = "Cert of identity";
-                    break;
-                case "kac":
-                    idt = "Kiwi Access & bank statement";
-                    break;
-                case "18p":
-                    idt = "18+ & bank statement";
-                    break;
-            }
-            let sqs = "";
-            Array.from(secqs).forEach(q => {
-                if (q.firstElementChild.checked) {
-                    if (sqs != "") { sqs += ", "; }
-                    sqs += q.firstElementChild.value;
-                }
-            });
-            let idb = "";
-            if (idby == "pin") {
-                idb = "PIN";
-            } else if (idby == "otp") {
-                idb = "OTP";
-            } else if (idby == "secq") {
-                idb = `Sec Qs\nQs asked:${sqs}`;
-            }
-
-            let r = reason;
-            let a = approver;
-            t = `Full name:${n}\nAcc Holder/Auth Contact:${c}\nID Type:${idt}\nID'd by:${idb}\nSwap reason:${r}\nApproved by:${a}`;
-            template.value = t;
-
-            charcount.innerText = template.value.length;
-
-            const b = document.getElementById("copytext");
-            const sqc = document.getElementById("seccount");
-
-            let e = true;
-            if (!n || !c || !idt || !idb || !r || !a) e = false;
-            if (contact == "authcontact" && !contacted) e = false;
-            if (idby == "secq") {
-                let scount = 0;
-                Array.from(secqs).forEach(q => {
-                    if (q.firstElementChild.checked) {
-                        scount += 1;
-                    }
-                })
-                if (scount < 2) {
-                    e = false;
-                }
-                sqc.innerText = ` | Question count: ${scount}/2`;
-            } else {
-                sqc.innerText = "";
-            }
-            b.disabled = !e;
-        }
-
-        function copyToClipboard() {
-            navigator.clipboard.writeText(template.value)
-                .catch(err => alert("Failed to copy text: " + err));
-        }
-    </script>
 </body>
 
 </html>
