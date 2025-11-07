@@ -1,7 +1,15 @@
 # Changelog | Jesse's Toolkit
+## 2.1
+*2025-11-07*
+- Added: SR template.
+- Removed: Help modal.
+- Added: Tab buttons between the three modes (SIM Swaps, SRs, KPI Reporting).
+- Changed: Separated out Loan Audits into a separate tab (which is not showing as it's still WIP).
+- Minor refactoring
+
 ## 2.0
 *2025-09-26*
-- SIM Swap template added!
+- Added: SIM Swap template!
 
 ## 1.4
 *2025-09-25*
