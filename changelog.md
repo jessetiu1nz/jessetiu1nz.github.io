@@ -5,6 +5,7 @@
 - Removed: Help modal.
 - Added: Tab buttons between the three modes (SIM Swaps, SRs, KPI Reporting).
 - Changed: Separated out Loan Audits into a separate tab (which is not showing as it's still WIP).
+- Changed: SIM Swap template Security Qs requires selecting On Account or Prepay (no longer defaults to On Account).
 - Minor refactoring
 
 ## 2.0
