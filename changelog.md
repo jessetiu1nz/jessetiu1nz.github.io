@@ -1,4 +1,11 @@
 # Changelog | Jesse's Toolkit
+## 2.2
+*2025-11-25*
+- Added: SIM Swap template Overseas Passport now provides a textbox to input the country.
+- Added: SIM Swap template Same day change to eSIM template.
+- Added: SR template radio buttons to switch between credit and debit.
+- Significant refactoring for SIM Swap template (code reduced by 400 lines in this update including all the additions!)
+
 ## 2.1
 *2025-11-07*
 - Added: SR template.
