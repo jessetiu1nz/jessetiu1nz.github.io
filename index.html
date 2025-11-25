@@ -57,35 +57,6 @@
             flex: 1;
         }
 
-        #modalBtn {
-            position: absolute;
-            top: 3%;
-            right: 3%;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2;
-            padding-top: 100px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            border-radius: 5px;
-        }
-
         .close {
             color: #aaaaaa;
             float: right;
@@ -150,41 +121,42 @@
             color: var(--white);
         }
 
+        /* Borders */
         #kpi-table th,
         #kpi-table tbody,
         #kpi-table tfoot {
-            /* Borders */
             border: 2px solid var(--white);
         }
 
+        /* Main Headers */
         #kpi-table thead tr:first-child {
-            /* Main Headers */
             background-color: var(--grey900);
         }
 
+        /* Sub Headers */
         #kpi-table thead tr:nth-child(2) {
-            /* Sub Headers */
             background-color: var(--green600);
         }
 
+        /* Sub Headers */
         #kpi-table thead tr:nth-child(2) :hover {
-            /* Sub Headers */
+
             background-color: var(--grey600);
             cursor: pointer;
         }
 
+        /* Odd rows */
         #kpi-table tbody tr:nth-child(odd) {
-            /* Odd rows */
             background-color: var(--green50);
         }
 
+        /* Even rows */
         #kpi-table tbody tr:nth-child(even) {
-            /* Even rows */
             background-color: var(--green100);
         }
 
+        /* Totals row */
         #kpi-table tfoot {
-            /* Totals row */
             background-color: var(--green400);
             font-weight: bold;
         }
@@ -217,10 +189,7 @@
             background-color: var(--green100);
         }
 
-        /* Loan Phone Audit */
-
-
-        /* SIM Swap template */
+        /* Border around templates */
         #simswap,
         #sr {
             width: fit-content;
@@ -268,110 +237,141 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Full Name:</td>
-                        <td><input type="text" oninput="nameChg(this.value)"></td>
-                    </tr>
-                    <tr>
-                        <td>Contact person:</td>
-                        <td>
-                            <label for="accholder"><input type="radio" name="contact" id="accholder"
-                                    onclick="contactChg('accholder')">Account
-                                holder</label>
-                            <label for="authcontact"><input type="radio" name="contact" id="authcontact"
-                                    onclick="contactChg('authcontact')">Authorised contact</label>
+                        <td colspan="2">
+                            <label for="sim_general">
+                                <input type="radio" name="sim_esimupgrade" id="sim_general"
+                                    onclick="sim_esimUpdate(false); sim_update()" checked>General</label>
+                            <label for="sim_esim"><input type="radio" name="sim_esimupgrade" id="sim_esim"
+                                    onclick="sim_esimUpdate(true); sim_update()">Move to eSIM (same day
+                                only)</label>
                         </td>
                     </tr>
-                    <tr id="contacted" hidden>
+                    <tr>
+                        <td>Full Name:</td>
+                        <td><input type="text" oninput="sim_update()" id="sim_name"></td>
+                    </tr>
+                    <tr id="sim_contact">
+                        <td>Contact person:</td>
+                        <td>
+                            <label for="sim_accholder"><input type="radio" name="sim_contact" id="sim_accholder"
+                                    value="accholder" onclick="sim_hideContacted(true); sim_update()">
+                                Account holder
+                            </label>
+                            <label for="sim_authcontact"><input type="radio" name="sim_contact" id="sim_authcontact"
+                                    value="authcontact" onclick="sim_hideContacted(false); sim_update()">
+                                Authorised contact
+                            </label>
+                        </td>
+                    </tr>
+                    <tr id="sim_contacted" hidden>
                         <td></td>
-                        <td><label for="ahcontacted"><input type="checkbox" name="ahcontacted" id="ahcontacted"
-                                    onclick="contactedChg()">Account holder contacted</label></td>
+                        <td><label for="sim_ahcontacted"><input type="checkbox" name="sim_ahcontacted"
+                                    id="sim_ahcontacted" onclick="sim_update()">Account holder
+                                contacted</label></td>
                     </tr>
                     <tr>
                         <td>ID Type:</td>
                         <td>
-                            <select name="idtype" id="idtype" onchange="idtypeChg(this.value)">
+                            <select name="sim_idtype" id="sim_idtype" onchange="sim_update()">
                                 <option value="" disabled selected>- Select ID -</option>
-                                <option value="nzdl">NZ Drivers Licence</option>
-                                <option value="nzpp">NZ Passport</option>
-                                <option value="auspp">Australian Passport</option>
-                                <option value="otherpp">Overseas Passport</option>
-                                <option value="nzbc">NZ Birth Certificate & Bank Statement (1 month)</option>
-                                <option value="coi">Certificate of Identity</option>
-                                <option value="kac">Kiwi Access Card & Bank Statement (1 month)
+                                <option value="NZDL">NZ Drivers Licence</option>
+                                <option value="NZ Passport">NZ Passport</option>
+                                <option value="Aus Passport">Australian Passport</option>
+                                <option value="Overseas Passport">Overseas Passport</option>
+                                <option value="Birth cert & bank statement">NZ Birth Certificate & Bank Statement (1
+                                    month)</option>
+                                <option value="Cert of identity">Certificate of Identity</option>
+                                <option value="Kiwi Access & bank statement">Kiwi Access Card & Bank Statement (1 month)
                                 </option>
-                                <option value="18p">18+ Card & Bank Statement (1 month)</option>
+                                <option value="18+ & bank statement">18+ Card & Bank Statement (1 month)</option>
+                                <option value="Sold same day" hidden>Sold same day</option>
                             </select>
+                            <input type="text" oninput="sim_update()" id="sim_country" placeholder="Enter country"
+                                hidden>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="sim_idby">
                         <td>ID'd by:</td>
-                        <td>
-                            <label for="pin"><input type="radio" name="pin" id="pin" onclick="pinChg('pin')">PIN</label>
-                            <label for="secq"><input type="radio" name="pin" id="secq" onclick="pinChg('secq')">Security
+                        <td id="sim_idbyRadios">
+                            <label for="sim_pin"><input type="radio" name="sim_idby" id="sim_pin" value="PIN"
+                                    onclick="sim_update()">PIN</label>
+                            <label for="sim_secq"><input type="radio" name="sim_idby" id="sim_secq" value="secq"
+                                    onclick="sim_update()">Security
                                 Questions</label>
-                            <label for="otp"><input type="radio" name="pin" id="otp" onclick="pinChg('otp')">OTP (Prepay
+                            <label for="sim_otp"><input type="radio" name="sim_idby" id="sim_otp" value="OTP"
+                                    onclick="sim_update()">OTP (Prepay
                                 only)</label>
                         </td>
+                        <td id="sim_prontoText" hidden><input type="text" oninput="sim_update()" id="sim_prontoSO"
+                                placeholder="Enter Pronto number"></td>
                     </tr>
-                    <tr id="secquestions" hidden>
+                    <tr id="sim_secquestions" hidden>
                         <td>
-                            <label for="oa"><input type="radio" name="questiontoggle" id="oa" onclick="secqChg('oa')">On
-                                account</label><br>
-                            <label for="pp"><input type="radio" name="questiontoggle" id="pp"
-                                    onclick="secqChg('pp')">Prepay</label>
+                            <label for="sim_oa"><input type="radio" name="sim_questiontoggle" id="sim_oa"
+                                    onclick="sim_update()">
+                                On account
+                            </label>
+                            <br>
+                            <label for="sim_pp"><input type="radio" name="sim_questiontoggle" id="sim_pp"
+                                    onclick="sim_update()">
+                                Prepay
+                            </label>
                         </td>
                         <td>
-                            <label class="oaq" hidden><input type="checkbox" onchange="editTemplate()"
-                                    value="Tenure">How long
-                                have you
-                                had this mobile number/connection?<br></label>
-                            <label class="oaq" hidden><input type="checkbox" onchange="editTemplate()"
-                                    value="Num called last 2 days">Can
-                                you tell me a number that you have called in the last 2 days and they have
-                                answered.<br></label>
-                            <label class="oaq" hidden><input type="checkbox" onchange="editTemplate()"
-                                    value="Payment Method">What method
-                                do you usually use to pay your account?<br></label>
-                            <label class="oaq" hidden><input type="checkbox" onchange="editTemplate()"
-                                    value="Most recent payment on account">What was the most recent payment amount on
-                                your
-                                account?<br></label>
-                            <label class="oaq" hidden><input type="checkbox" onchange="editTemplate()"
-                                    value="Last call to One NZ/Details of Call">When did you last call us and what did
-                                you
-                                discuss?</label>
+                            <label class="sim_oaq" hidden><input type="checkbox" onchange="sim_update()" value="Tenure">
+                                How long have you had this mobile number/connection?<br>
+                            </label>
+                            <label class="sim_oaq" hidden><input type="checkbox" onchange="sim_update()"
+                                    value="Num called last 2 days">
+                                Can you tell me a number that you have called in the last 2 days and they have
+                                answered.<br>
+                            </label>
+                            <label class="sim_oaq" hidden><input type="checkbox" onchange="sim_update()"
+                                    value="Payment Method">
+                                What method do you usually use to pay your account?<br>
+                            </label>
+                            <label class="sim_oaq" hidden><input type="checkbox" onchange="sim_update()"
+                                    value="Most recent payment on account">
+                                What was the most recent payment amount on your account?<br>
+                            </label>
+                            <label class="sim_oaq" hidden><input type="checkbox" onchange="sim_update()"
+                                    value="Last call to One NZ/Details of Call">
+                                When did you last call us and what did you discuss?
+                            </label>
 
-                            <label class="ppq" hidden><input type="checkbox" onchange="editTemplate()"
-                                    value="Last topup date & value">When did you last top up your number and what was
-                                the top up
-                                value?<br></label>
-                            <label class="ppq" hidden><input type="checkbox" onchange="editTemplate()"
-                                    value="Last 4 Digits Credit Card">What are the last four digits of the credit card
-                                registered on
-                                your ‘My One NZ’ account (if you have one) or on your account<br></label>
-                            <label class="ppq" hidden><input type="checkbox" onchange="editTemplate()"
-                                    value="Monthly Bundle-Min/Data/Txt">What is your monthly bundle of minutes, txt’s
-                                and
-                                data?<br></label>
-                            <label class="ppq" hidden><input type="checkbox" onchange="editTemplate()"
-                                    value="Tenure">How long have
-                                you had this mobile number/connection?<br></label>
-                            <label class="ppq" hidden><input type="checkbox" onchange="editTemplate()"
-                                    value="Num called last 2 days">Can you tell me a number that you have called in the
-                                last 2 days
-                                and they have answered.</label>
+                            <label class="sim_ppq" hidden><input type="checkbox" onchange="sim_update()"
+                                    value="Last topup date & value">
+                                When did you last top up your number and what was the top up value?<br>
+                            </label>
+                            <label class="sim_ppq" hidden><input type="checkbox" onchange="sim_update()"
+                                    value="Last 4 Digits Credit Card">
+                                What are the last four digits of the credit card registered on your ‘My One NZ’ account
+                                (if you have one) or on your account<br>
+                            </label>
+                            <label class="sim_ppq" hidden><input type="checkbox" onchange="sim_update()"
+                                    value="Monthly Bundle-Min/Data/Txt">
+                                What is your monthly bundle of minutes, txt’s and data?<br>
+                            </label>
+                            <label class="sim_ppq" hidden><input type="checkbox" onchange="sim_update()" value="Tenure">
+                                How long have you had this mobile number/connection?<br>
+                            </label>
+                            <label class="sim_ppq" hidden><input type="checkbox" onchange="sim_update()"
+                                    value="Num called last 2 days">
+                                Can you tell me a number that you have called in the last 2 days and they have answered.
+                            </label>
                         </td>
                     </tr>
                     <tr>
                         <td>Swap reason:</td>
-                        <td><input type="text" oninput="reasonChg(this.value)"></td>
+                        <td><input type="text" oninput="sim_update()" id="sim_reason"></td>
                     </tr>
                     <tr>
                         <td>Approved by:</td>
-                        <td><input type="text" oninput="approverChg(this.value)"></td>
+                        <td><input type="text" oninput="sim_update()" id="sim_approver">
+                        </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><textarea disabled id="template" rows="10" cols="80">
+                        <td colspan="2"><textarea disabled id="sim_textarea" rows="10" cols="80">
 Full name:
 Acc Holder/Auth Contact:
 ID Type:
@@ -379,11 +379,10 @@ ID'd by:
 Swap reason:
 Approved by:
                             </textarea><br>
-                            Character count: <span id="charcount">79</span>/250<span id="seccount"></span><br><br>
-                            <button id="copytext" onclick="copyToClipboard()" disabled>Copy to clipboard</button>
+                            Character count: <span id="sim_charcount">79</span>/250<span id="sim_sqc"></span><br><br>
+                            <button id="copytext" onclick="sim_copy2clipboard()" disabled>Copy to clipboard</button>
 
                         </td>
-
                     </tr>
                 </table>
             </div>
@@ -391,7 +390,16 @@ Approved by:
                 <table>
                     <tr>
                         <td colspan="2">
-                            <h2>Service Request for Credit Adjustments</h2>
+                            <h2>Service Request for Credit/Debit Adjustments</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="sr_credit">
+                                <input type="radio" name="sr_creditdebit" id="sr_credit" onclick="sr_textUpdate()"
+                                    value="credit" checked>Credit</label>
+                            <label for="sr_debit"><input type="radio" name="sr_creditdebit" id="sr_debit"
+                                    onclick="sr_textUpdate()" value="debit">Debit</label>
                         </td>
                     </tr>
                     <tr>
@@ -423,13 +431,12 @@ Approved by:
                         <td colspan="2"><textarea disabled id="sr_textbox" rows="10" cols="80">
 Customer number:
 Customer name:
-Complaint reference number:
 Total amount to be credited:
 Breakdown/computation with respective month of invoice and charge:
 Reason for credit:
                             </textarea><br>
-                            <span id="sr_charcount">Character count: 180/250</span><br><br>
-                            <button id="sr_copy2clipboard" onclick="sr_copy2clipboard()">Copy to clipboard</button>
+                            <span id="sr_charcount">Character count: 151/250</span><br><br>
+                            <button id="sr_copybutton" onclick="sr_copy2clipboard()" disabled>Copy to clipboard</button>
 
                         </td>
                     </tr>
@@ -498,7 +505,7 @@ Reason for credit:
     <script> // General
 
         // Version Info
-        const version = "v2.1";
+        const version = "v2.2";
         const versionElements = document.getElementsByClassName("version");
         for (let i = 0; i < versionElements.length; i++) {
             const v = document.createTextNode(version);
@@ -518,176 +525,141 @@ Reason for credit:
         // -------------------------------------------------------------------------------------------------------------------------
         // SIM Swap template form
 
-        var name = "";
-        var contact = "";
-        var contacted = false;
-        var idtype = "";
-        var idby = "";
-        const secquestions = document.getElementById("secquestions");
-        const questiontoggle = document.getElementsByClassName("questiontoggle");
-        const secqs = document.querySelectorAll(".oaq, .ppq");
-        var reason = "";
-        var approver = "";
-        var template = document.getElementById("template");
-        var charcount = document.getElementById("charcount");
-
-        function nameChg(val) {
-            name = val;
-            editTemplate();
-        }
-
-        function contactChg(val) {
-            contact = val;
-            if (contact == 'accholder') {
-                document.getElementById("contacted").hidden = true;
-                document.getElementById("ahcontacted").checked = false;
-                contacted = false;
-            } else if (contact == 'authcontact') {
-                document.getElementById("contacted").hidden = false;
-            }
-            editTemplate();
-        }
-
-        function contactedChg() {
-            contacted = document.getElementById("ahcontacted").checked;
-            editTemplate();
-        }
-
-        function idtypeChg(val) {
-            idtype = val;
-            editTemplate();
-        }
-
-        function pinChg(val) {
-            idby = val;
-            if (val == "pin" || val == "otp") {
-                secquestions.hidden = true;
-                Array.from(secqs).forEach(q => {
+        function sim_esimUpdate(esim) {
+            if (esim) {
+                sim_contact.hidden = true;
+                sim_idtype.value = "Sold same day";
+                sim_idtype.disabled = true;
+                sim_idbyRadios.hidden = true;
+                sim_pin.checked = false;
+                sim_secq.checked = false;
+                sim_secquestions.hidden = true;
+                sim_oa.checked = false;
+                sim_pp.checked = false;
+                Array.from(document.querySelectorAll(".sim_oaq, .sim_ppq")).forEach(q => {
+                    q.hidden = true;
                     q.firstElementChild.checked = false;
                 });
+                sim_otp.checked = false;
+                sim_prontoText.hidden = false;
+                sim_reason.value = "Move to eSIM";
+                sim_reason.disabled = true;
             } else {
-                secquestions.hidden = false;
-                Array.from(secqs).forEach(q => {
-                    q.hidden = true;
-                    q.firstElementChild.checked = false;
-                });
-                document.getElementById('oa').checked = false;
-                document.getElementById('pp').checked = false;
+                sim_contact.hidden = false;
+                sim_idtype.value = "";
+                sim_idtype.disabled = false;
+                sim_idbyRadios.hidden = false;
+                sim_prontoText.value = ""
+                sim_prontoText.hidden = true;
+                sim_reason.value = "";
+                sim_reason.disabled = false;
             }
-            editTemplate();
+            sim_accholder.checked = false;
+            sim_authcontact.checked = false;
+            sim_hideContacted(true);
         }
 
-        function reasonChg(val) {
-            reason = val;
-            editTemplate();
+        function sim_hideContacted(hide) {
+            sim_contacted.hidden = hide;
+            if (hide) sim_ahcontacted.checked = false;
         }
 
-        function approverChg(val) {
-            approver = val;
-            editTemplate();
-        }
+        function sim_update() {
+            let name = sim_name.value ?? "";
 
-        function secqChg(val) {
-            Array.from(secqs).forEach(q => {
-                if (val == "oa" && q.className == "oaq") {
-                    q.hidden = false;
-                } else if (val == "pp" && q.className == "ppq") {
-                    q.hidden = false;
-                } else {
-                    q.hidden = true;
-                }
-                q.firstElementChild.checked = false;
-            });
-            editTemplate();
-        }
-
-        function editTemplate() {
-            let t = template.innerHTML;
-            let n = name;
-            let c = "";
-            if (contact == "accholder") {
-                c = "Acc Holder";
-            } else if (contact == "authcontact") {
-                c = `Auth Contact\nAcc Holder Contacted:`;
-                if (contacted) {
-                    c += "Y";
+            const sim_contact = document.querySelector("input[name='sim_contact']:checked");
+            let contact = "";
+            if (sim_general.checked) {
+                contact = "\nAcc Holder/Auth Contact:";
+                if (sim_contact && sim_contact.value == "accholder") contact += "Acc holder";
+                else if (sim_contact && sim_contact.value == "authcontact") {
+                    contact += `Auth contact\nAcc Holder Contacted:`;
+                    if (sim_ahcontacted.checked) contact += "Y";
                 }
             }
-            let idt = "";
-            switch (idtype) {
-                case "nzdl":
-                    idt = "NZDL";
-                    break;
-                case "nzpp":
-                    idt = "NZ Passport";
-                    break;
-                case "auspp":
-                    idt = "Aus Passport";
-                    break;
-                case "otherpp":
-                    idt = "Overseas Passport";
-                    break;
-                case "nzbc":
-                    idt = "Birth cert & bank statement";
-                    break;
-                case "coi":
-                    idt = "Cert of identity";
-                    break;
-                case "kac":
-                    idt = "Kiwi Access & bank statement";
-                    break;
-                case "18p":
-                    idt = "18+ & bank statement";
-                    break;
-            }
-            let sqs = "";
-            Array.from(secqs).forEach(q => {
-                if (q.firstElementChild.checked) {
-                    if (sqs != "") { sqs += ", "; }
-                    sqs += q.firstElementChild.value;
-                }
-            });
-            let idb = "";
-            if (idby == "pin") {
-                idb = "PIN";
-            } else if (idby == "otp") {
-                idb = "OTP";
-            } else if (idby == "secq") {
-                idb = `Sec Qs\nQs asked:${sqs}`;
+
+            let idtype = sim_idtype.value ?? "";
+
+            if (sim_idtype.value == "Overseas Passport") {
+                sim_country.hidden = false;
+                idtype = `${sim_country.value} Passport`;
+            } else {
+                sim_country.hidden = true;
+                sim_country.value = "";
             }
 
-            let r = reason;
-            let a = approver;
-            t = `Full name:${n}\nAcc Holder/Auth Contact:${c}\nID Type:${idt}\nID'd by:${idb}\nSwap reason:${r}\nApproved by:${a}`;
-            template.value = t;
-
-            charcount.innerText = template.value.length;
-
-            const b = document.getElementById("copytext");
-            const sqc = document.getElementById("seccount");
-
-            let e = true;
-            if (!n || !c || !idt || !idb || !r || !a) e = false;
-            if (contact == "authcontact" && !contacted) e = false;
-            if (idby == "secq") {
-                let scount = 0;
-                Array.from(secqs).forEach(q => {
-                    if (q.firstElementChild.checked) {
-                        scount += 1;
+            const sim_idby = document.querySelector("input[name='sim_idby']:checked");
+            let idby = "";
+            let seccount = 0;
+            if (sim_idby) {
+                if (sim_idby.value == "secq") {
+                    sim_secquestions.hidden = false;
+                    if (sim_oa.checked) {
+                        Array.from(document.querySelectorAll(".sim_oaq")).forEach(q => {
+                            q.hidden = false;
+                        });
+                        Array.from(document.querySelectorAll(".sim_ppq")).forEach(q => {
+                            q.firstElementChild.checked = false;
+                            q.hidden = true;
+                        });
+                    } else if (sim_pp.checked) {
+                        Array.from(document.querySelectorAll(".sim_oaq")).forEach(q => {
+                            q.firstElementChild.checked = false;
+                            q.hidden = true;
+                        });
+                        Array.from(document.querySelectorAll(".sim_ppq")).forEach(q => {
+                            q.hidden = false;
+                        });
                     }
-                })
-                if (scount < 2) {
-                    e = false;
+
+                    let secqs = "";
+                    Array.from(document.querySelectorAll(".sim_oaq, .sim_ppq")).forEach(q => {
+                        if (q.firstElementChild.checked) {
+                            seccount += 1;
+                            if (secqs != "") { secqs += ", "; }
+                            secqs += q.firstElementChild.value;
+                        }
+                    });
+                    idby = `Sec Qs\nQs asked:${secqs}`;
+                } else {
+                    idby = sim_idby.value;
+                    sim_secquestions.hidden = true;
+                    sim_oa.checked = false;
+                    sim_pp.checked = false;
+
+                    Array.from(document.querySelectorAll(".sim_oaq, .sim_ppq")).forEach(q => {
+                        q.firstElementChild.checked = false;
+                        q.hidden = true;
+                    });
                 }
-                sqc.innerText = ` | Question count: ${scount}/2`;
-            } else {
-                sqc.innerText = "";
+            } else if (!sim_prontoText.hidden) {
+                idby = sim_prontoSO.value;
             }
-            b.disabled = !e;
+
+            let reason = sim_reason.value ?? "";
+            let approver = sim_approver.value ?? "";
+
+            sim_textarea.value = `Full name:${name}${contact}\nID Type:${idtype}\nID'd by:${idby}\nSwap reason:${reason}\nApproved by:${approver}`;
+            sim_charcount.innerText = sim_textarea.value.length;
+
+            const sim_copybutton = document.getElementById("copytext");
+
+            let valid = true;
+            if (sim_general.checked && (!name || !sim_contact || !idtype || !idby || !reason || !approver)) valid = false;
+            if (sim_esim.checked && (!name || idby.length < 8 || !approver)) valid = false;
+            if (sim_contact && sim_contact.value == "authcontact" && !sim_ahcontacted.checked) valid = false;
+            if (sim_idtype.value == "Overseas Passport" && !sim_country.value) valid = false;
+            if (sim_idby && sim_idby.value == "secq") {
+                if (seccount < 2) valid = false;
+                sim_sqc.innerText = ` | Question count: ${seccount}/2`;
+            } else {
+                sim_sqc.innerText = "";
+            }
+            sim_copybutton.disabled = !valid;
         }
 
-        function copyToClipboard() {
-            navigator.clipboard.writeText(template.value)
+        function sim_copy2clipboard() {
+            navigator.clipboard.writeText(sim_textarea.value)
                 .catch(err => alert("Failed to copy text: " + err));
         }
     </script>
@@ -704,10 +676,14 @@ Reason for credit:
         const sr_charcount = document.getElementById("sr_charcount");
 
         function sr_textUpdate() {
-            let sr_ref = "";
-            if (sr_refnum.value != "") { sr_ref = `Complaint reference number: ${sr_refnum.value}\n`; }
-            sr_textbox.value = `Customer number: ${sr_cxnum.value}\nCustomer name: ${sr_cxname.value}\n${sr_ref}Total amount to be credited: ${sr_amt.value}\nBreakdown/computation with respective month of invoice and charge: ${sr_breakdown.value}\nReason for credit: ${sr_reason.value}`;
+            let ref = "";
+            let crdb = document.querySelector("input[name='sr_creditdebit']:checked");
+            if (sr_refnum.value != "") { ref = `Complaint reference number: ${sr_refnum.value}\n`; }
+            sr_textbox.value = `Customer number: ${sr_cxnum.value}\nCustomer name: ${sr_cxname.value}\n${ref}Total amount to be ${crdb.value}ed: ${sr_amt.value}\nBreakdown/computation with respective month of invoice and charge: ${sr_breakdown.value}\nReason for ${crdb.value}: ${sr_reason.value}`;
             sr_charcount.innerText = `Character count: ${sr_textbox.value.length}/250`;
+            let valid = true;
+            if (sr_cxnum.value == "" || sr_cxname.value == "" || sr_amt.value == "" || sr_breakdown.value == "" || sr_reason.value == "") valid = false;
+            sr_copybutton.disabled = !valid;
         }
 
         function sr_copy2clipboard() {
