@@ -2,6 +2,7 @@
 ## 2.3
 *2025-12-25*
 - Added: Pronto Discounts template
+- Added: Link to changelog
 - Added: K-hub links to templates
 - Removed: All Loan Audit WIP
 - Refactoring
