@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jesse's Toolkit</title>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.mini.min.js"></script>
     <style>
         /* Color definitions */
         :root {
@@ -55,21 +54,6 @@
 
         section {
             flex: 1;
-        }
-
-        .close {
-            color: #aaaaaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            margin-top: -6px;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
         }
 
         h1 {
@@ -191,7 +175,8 @@
 
         /* Border around templates */
         #simswap,
-        #sr {
+        #sr,
+        #prontodisc {
             width: fit-content;
             padding: 1em;
             border: 1px var(--green900);
@@ -217,6 +202,7 @@
 <body>
     <div class="page-container">
         <header>
+            <a style="float: right;" href="jessetiu1nz.github.io/changelog">changelog</a>
             <h1>Jesse's Toolkit</h1>
             <h3 class="version"></h3>
         </header>
@@ -224,6 +210,7 @@
             <p>
                 <button onclick="changeMode('sim')">SIM Swap Template</button>
                 <button onclick="changeMode('sr')">SR Template</button>
+                <button onclick="changeMode('prontodisc')">Pronto Discounts</button>
                 <button onclick="changeMode('kpi')">KPI Report</button>
                 <!-- <button onclick="changeMode('loan')">Loan Audit</button> -->
             </p>
@@ -233,6 +220,8 @@
                 <table>
                     <tr>
                         <td colspan="2">
+                            <a style="float: right;" href="https://k-hub.vodafone.nz/siebel-process-a-sim-swap"
+                                target="_blank">K-hub link</a>
                             <h2>SIM Swap Template Maker</h2>
                         </td>
                     </tr>
@@ -371,7 +360,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><textarea disabled id="sim_textarea" rows="10" cols="80">
+                        <td colspan="2"><textarea disabled id="sim_textbox" rows="10" cols="80">
 Full name:
 Acc Holder/Auth Contact:
 ID Type:
@@ -380,7 +369,8 @@ Swap reason:
 Approved by:
                             </textarea><br>
                             Character count: <span id="sim_charcount">79</span>/250<span id="sim_sqc"></span><br><br>
-                            <button id="copytext" onclick="sim_copy2clipboard()" disabled>Copy to clipboard</button>
+                            <button id="copytext" onclick="copy2clipboard(sim_textbox.value)" disabled>Copy to
+                                clipboard</button>
 
                         </td>
                     </tr>
@@ -390,6 +380,9 @@ Approved by:
                 <table>
                     <tr>
                         <td colspan="2">
+                            <a style="float: right;"
+                                href="https://k-hub.vodafone.nz/service-request-raise-a-service-request-for-credit-adjustment"
+                                target="_blank">K-hub link</a>
                             <h2>Service Request for Credit/Debit Adjustments</h2>
                         </td>
                     </tr>
@@ -436,7 +429,96 @@ Breakdown/computation with respective month of invoice and charge:
 Reason for credit:
                             </textarea><br>
                             <span id="sr_charcount">Character count: 151/250</span><br><br>
-                            <button id="sr_copybutton" onclick="sr_copy2clipboard()" disabled>Copy to clipboard</button>
+                            <button id="sr_copybutton" onclick="copy2clipboard(sr_textbox.value)" disabled>Copy to
+                                clipboard</button>
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="prontodisc" hidden>
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <a style="float: right;" href="https://k-hub.vodafone.nz/pronto-process-a-discount"
+                                target="_blank">K-hub link</a>
+                            <h2>Pronto Discounts</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Discount Type:</td>
+                        <td>
+                            <label for="prontodisc_pricematch">
+                                <input type="radio" name="prontodisc_type" id="prontodisc_pricematch"
+                                    onclick="prontodisc_textUpdate()" value="Price Match">Price Match</label>
+                            <label for="prontodisc_goodwill"><input type="radio" name="prontodisc_type"
+                                    id="prontodisc_goodwill" onclick="prontodisc_textUpdate()"
+                                    value="Goodwill">Goodwill</label>
+                            <label for="prontodisc_clearance"><input type="radio" name="prontodisc_type"
+                                    id="prontodisc_clearance" onclick="prontodisc_textUpdate()"
+                                    value="Clearance">Clearance</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Reason:</td>
+                        <td><input type="text" oninput="prontodisc_textUpdate()" id="prontodisc_reason"
+                                placeholder="eg. Competitor offer, Service delay or EOL stock" size="60"></td>
+                    </tr>
+                    <tr id="prontodisc_competitor" hidden>
+                        <td>Competitor:</td>
+                        <td><input type="text" oninput="prontodisc_textUpdate()" id="prontodisc_competitorname"
+                                placeholder="eg. Spark, 2deg, Noel Leeming, JB Hifi, PB Tech" size="37">
+                            Price ($): <input type="number" step="0.01" min="0.01" oninput="prontodisc_textUpdate()"
+                                id="prontodisc_competitorprice" style="width: 75px;"></td>
+                    </tr>
+                    <tr>
+                        <td>Discount:</td>
+                        <td>
+                            <input type="number" oninput="prontodisc_textUpdate()" id="prontodisc_discount" step="0.01"
+                                min="0.01" style="width: 75px;">
+                            <label for="prontodisc_dollar"><input type="radio" name="prontodisc_units"
+                                    id="prontodisc_dollar" onclick="prontodisc_textUpdate()" value="dollars">$</label>
+                            <label for="prontodisc_percentage"><input type="radio" name="prontodisc_units"
+                                    id="prontodisc_percentage" onclick="prontodisc_textUpdate()"
+                                    value="percent">%</label>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Final Price ($):</td>
+                        <td><input type="number" oninput="prontodisc_textUpdate()" id="prontodisc_final" step="0.01"
+                                min="0.01" style="width: 75px;"></td>
+                    </tr>
+                    <tr>
+                        <td>Approval:</td>
+                        <td>
+                            <label for="prontodisc_noapprover">
+                                <input type="radio" name="prontodisc_approver" id="prontodisc_noapprover"
+                                    onclick="prontodisc_textUpdate()" value="none" checked>None</label>
+                            <label for="prontodisc_retaillead"><input type="radio" name="prontodisc_approver"
+                                    id="prontodisc_retaillead" onclick="prontodisc_textUpdate()"
+                                    value="retaillead">Retail Lead</label>
+                            <label for="prontodisc_arealead"><input type="radio" name="prontodisc_approver"
+                                    id="prontodisc_arealead" onclick="prontodisc_textUpdate()" value="arealead">Area
+                                Lead</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Notes:</td>
+                        <td><input type="text" oninput="prontodisc_textUpdate()" id="prontodisc_notes" size="60"></td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2"><textarea disabled id="prontodisc_textbox" rows="10" cols="80">
+Type:
+Reason:
+Discount & Final Price:
+Notes:
+                            </textarea><br>
+                            <span id="prontodisc_warning"><i>Discounts over $30 must be approved.</i></span><br><br>
+                            <button id="prontodisc_copybutton" onclick="copy2clipboard(prontodisc_textbox.value)"
+                                disabled>Copy to
+                                clipboard</button>
 
                         </td>
                     </tr>
@@ -456,56 +538,14 @@ Reason for credit:
                     <p id="copyright" hidden>Jesse's Toolkit <span class="version"></span></p>
                 </div>
             </div>
-            <div id="loan-audit" hidden>
-                <p>
-                    <label class="button">
-                        <input type="file" id="loan-input" accept=".ods" title="">
-                        Upload Loan Data
-                    </label>
-                    <span id="file-selected" style="margin-left: 1em;"></span>
-                </p>
-                <input type="text" id="scan" placeholder="Scan device">
-                <h2>Available Devices</h2>
-                <table id="loan-available">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Item</th>
-                            <th>IMEI</th>
-                            <th>Scanned</th>
-                            <th>Condition</th>
-                            <th>Action required</th>
-                            <th>Notes / action taken</th>
-                        </tr>
-                    </thead>
-                    <tbody id="av-tbody"></tbody>
-                </table>
-                <h2>Allocated Devices</h2>
-                <table id="loan-allocated">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Item</th>
-                            <th>IMEI</th>
-                            <th>Contract in store</th>
-                            <th>Due date</th>
-                            <th>Action required</th>
-                            <th>Notes / action taken</th>
-                        </tr>
-                    </thead>
-                    <tbody id="al-tbody"></tbody>
-                </table>
-                <input type="button" value="Download report" onclick="downloadLoanReport()">
-            </div>
 
-            <pre id="output"></pre>
         </section>
         <footer>Created by Jesse Tiu 2025. <a href="mailto:jesse.tiu@one.nz">jesse.tiu@one.nz</a></footer>
     </div>
     <script> // General
 
         // Version Info
-        const version = "v2.2";
+        const version = "v2.3";
         const versionElements = document.getElementsByClassName("version");
         for (let i = 0; i < versionElements.length; i++) {
             const v = document.createTextNode(version);
@@ -517,13 +557,16 @@ Reason for credit:
             document.getElementById("simswap").hidden = (mode != 'sim');
             document.getElementById("sr").hidden = (mode != 'sr');
             document.getElementById("kpi").hidden = (mode != 'kpi');
-            document.getElementById("loan-audit").hidden = (mode != 'loan');
+            document.getElementById("prontodisc").hidden = (mode != 'prontodisc');
         }
 
+        function copy2clipboard(text) {
+            navigator.clipboard.writeText(text)
+                .catch(err => alert("Failed to copy text: " + err));
+        }
     </script>
     <script> // SIM Swap Template
         // -------------------------------------------------------------------------------------------------------------------------
-        // SIM Swap template form
 
         function sim_esimUpdate(esim) {
             if (esim) {
@@ -639,8 +682,8 @@ Reason for credit:
             let reason = sim_reason.value ?? "";
             let approver = sim_approver.value ?? "";
 
-            sim_textarea.value = `Full name:${name}${contact}\nID Type:${idtype}\nID'd by:${idby}\nSwap reason:${reason}\nApproved by:${approver}`;
-            sim_charcount.innerText = sim_textarea.value.length;
+            sim_textbox.value = `Full name:${name}${contact}\nID Type:${idtype}\nID'd by:${idby}\nSwap reason:${reason}\nApproved by:${approver}`;
+            sim_charcount.innerText = sim_textbox.value.length;
 
             const sim_copybutton = document.getElementById("copytext");
 
@@ -658,22 +701,9 @@ Reason for credit:
             sim_copybutton.disabled = !valid;
         }
 
-        function sim_copy2clipboard() {
-            navigator.clipboard.writeText(sim_textarea.value)
-                .catch(err => alert("Failed to copy text: " + err));
-        }
     </script>
     <script> // SR Template
         //--------------------------------------------------------------------------------------------------
-
-        const sr_cxnum = document.getElementById("sr_cxnum");
-        const sr_cxname = document.getElementById("sr_cxname");
-        const sr_refnum = document.getElementById("sr_refnum");
-        const sr_amt = document.getElementById("sr_amt");
-        const sr_breakdown = document.getElementById("sr_breakdown");
-        const sr_reason = document.getElementById("sr_reason");
-        const sr_textbox = document.getElementById("sr_textbox");
-        const sr_charcount = document.getElementById("sr_charcount");
 
         function sr_textUpdate() {
             let ref = "";
@@ -686,15 +716,45 @@ Reason for credit:
             sr_copybutton.disabled = !valid;
         }
 
-        function sr_copy2clipboard() {
-            navigator.clipboard.writeText(sr_textbox.value)
-                .catch(err => alert("Failed to copy text: " + err));
+    </script>
+    <script> // Pronto Discounts
+        //--------------------------------------------------------------------------------------------------
+
+        function prontodisc_textUpdate() {
+            let valid = true;
+            const prontodisc_type = document.querySelector("input[name='prontodisc_type']:checked");
+            let type = "";
+            if (prontodisc_type) type = prontodisc_type.value;
+            let competitor = "";
+            if (type == "Price Match") {
+                prontodisc_competitor.hidden = false;
+                competitor = `\nCompetitor & Price: ${prontodisc_competitorname.value}, $${prontodisc_competitorprice.value}`;
+                if (prontodisc_competitorname.value == "" || prontodisc_competitorprice.value == "") valid = false;
+            } else {
+                prontodisc_competitor.hidden = true;
+            }
+
+            let units = document.querySelector("input[name='prontodisc_units']:checked");
+            let discountamount = "";
+            if (units && units.value == "dollars") discountamount = `$${prontodisc_discount.value}`;
+            else if (units && units.value == "percent") discountamount = `${prontodisc_discount.value}%`;
+            else valid = false;
+
+            let approver = document.querySelector("input[name='prontodisc_approver']:checked");
+            let approved = "";
+            if (approver && approver.value == "retaillead") approved = "\nApproval: Retail Lead";
+            else if (approver && approver.value == "arealead") approved = "\nApproval: Area Lead";
+
+            prontodisc_textbox.value = `Type: ${type}\nReason: ${prontodisc_reason.value}${competitor}\nDiscount & Final Price: ${discountamount} off -> $${prontodisc_final.value}${approved}\nNotes: ${prontodisc_notes.value}`;
+            if (type == "" || prontodisc_reason.value == "" || prontodisc_discount.value == "" || prontodisc_final.value == "" || prontodisc_notes.value == "") valid = false;
+            if (units.value == "dollars" && prontodisc_discount.value > 30 && approved == "") valid = false;
+            if (units.value == "percent" && prontodisc_discount.value > 100) valid = false;
+            prontodisc_copybutton.disabled = !valid;
         }
 
     </script>
     <script> // KPI Tracker Report
         // ------------------------------------------------------------------------------------------------------------------------------
-        // KPI TRACKER
 
         // IDs of all the columns calculated
         const d = {
@@ -1210,282 +1270,8 @@ Reason for credit:
         window.addEventListener('load', positionScreenBtn);
         window.addEventListener('resize', positionScreenBtn);
         window.addEventListener('scroll', positionScreenBtn);
-        document.querySelector('#file-input').onchange = function () {
+        document.querySelector('#kpi-input').onchange = function () {
             document.getElementById('file-selected').innerText = this.files[0]?.name;
-        }
-    </script>
-    <script> // Loan Audit
-        // -------------------------------------------------------------------------------------------------------------------------
-
-        // Loan Phone Audit
-        var audit = {};
-        var today;
-
-        // Loan audit input
-        document.getElementById("loan-input").addEventListener("change", (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                document.getElementById("kpi").hidden = true;
-                document.getElementById("loan-audit").hidden = false;
-                reader.onload = function (e) {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-
-                    // Get the first sheet name
-                    const sheetName = workbook.SheetNames[0];
-
-                    // Get the data from the first sheet
-                    const sheet = workbook.Sheets[sheetName];
-                    const jsonData = XLSX.utils.sheet_to_json(sheet);
-
-                    loadAudit(jsonData);
-                }
-                reader.readAsArrayBuffer(file);
-            }
-        });
-
-        // Event listener for scanner
-        document.getElementById("scan").addEventListener("keydown", function (event) {
-            if (event.key === "Enter") {
-                const scanned = document.getElementById("scan");
-
-                if (audit.available[scanned.value]) {
-                    audit.available[scanned.value].scanned = true;
-                    document.getElementById(`s${scanned.value}`).innerText = "Yes";
-                } else if (audit.allocated[scanned.value]) {
-                    console.log("Scanned allocated phone");
-                } else {
-                    console.log("Scanned IMEI not found");
-                }
-                scanned.value = "";
-            }
-        });
-
-        function loadAudit(jsonData) {
-            today = new Date();
-            audit = { "available": {}, "allocated": {} };
-
-            jsonData.forEach(device => {
-                let id = device['Serial#'];
-                if (device.Availability == "Available") {
-                    audit.available[id] = {
-                        "name": device['Serial Description'],
-                        "model": device['Item'],
-                        "scanned": false,
-                        "condition": null,
-                        "actionreq": null,
-                        "notes": ""
-                    }
-                } else if (device.Availability == "Allocated") {
-                    audit.allocated[id] = {
-                        "name": device['Serial Description'],
-                        "model": device['Item'],
-                        "condition": null,
-                        "duedate": null,
-                        "actionreq": null,
-                        "notes": ""
-                    }
-                } else {
-                    console.log("Could not find availability for device:" + device);
-                }
-            });
-
-            const avTableBody = document.getElementById('av-tbody');
-            avTableBody.innerHTML = "";
-            Object.entries(audit.available).forEach(([id, data]) => {
-                const tr = document.createElement('tr');
-
-                const name = document.createElement('td');
-                name.textContent = data.name;
-                tr.appendChild(name);
-
-                const item = document.createElement('td');
-                item.textContent = data.model;
-                tr.appendChild(item);
-
-                const imei = document.createElement('td');
-                imei.textContent = id;
-                tr.appendChild(imei);
-
-                const scanned = document.createElement('td');
-                scanned.id = `s${id}`;
-                scanned.textContent = "No";
-                tr.appendChild(scanned);
-
-                const condition = document.createElement('td');
-                const conditionDropdown = document.createElement('select');
-                conditionDropdown.id = `c${id}`;
-                conditionDropdown.onchange = function (event) { changePhCondition(id, event.target.value) }
-                const condDefault = document.createElement('option');
-                condDefault.value = "";
-                condDefault.disabled = true;
-                condDefault.defaultSelected = true;
-                condDefault.innerText = "- Select condition -";
-                conditionDropdown.appendChild(condDefault);
-                const good = document.createElement('option');
-                good.value = "good";
-                good.innerText = "Good condition";
-                conditionDropdown.appendChild(good);
-                const damaged = document.createElement('option');
-                damaged.value = "damaged";
-                damaged.innerText = "Damaged by customer";
-                conditionDropdown.appendChild(damaged);
-                const lost = document.createElement('option');
-                lost.value = "lost";
-                lost.innerText = "Unusable or lost";
-                conditionDropdown.appendChild(lost);
-                condition.appendChild(conditionDropdown);
-                tr.appendChild(condition);
-
-                const actionreq = document.createElement('td');
-                actionreq.id = `ar${id}`;
-                tr.appendChild(actionreq);
-
-                const actiontaken = document.createElement('td');
-                actiontaken.id = `at${id}`;
-                const comment = document.createElement('input');
-                comment.type = "text";
-                comment.oninput = function (event) {
-                    audit.available[id].notes = event.target.value;
-                };
-                actiontaken.appendChild(comment);
-                tr.appendChild(actiontaken);
-
-                avTableBody.appendChild(tr);
-            });
-
-            const alTableBody = document.getElementById('al-tbody');
-            alTableBody.innerHTML = "";
-            Object.entries(audit.allocated).forEach(([id, data]) => {
-                const tr = document.createElement('tr');
-
-                const name = document.createElement('td');
-                name.textContent = data.name;
-                tr.appendChild(name);
-
-                const item = document.createElement('td');
-                item.textContent = data.model;
-                tr.appendChild(item);
-
-                const imei = document.createElement('td');
-                imei.textContent = id;
-                tr.appendChild(imei);
-
-                const contract = document.createElement('td');
-                const contractDropdown = document.createElement('select');
-                contractDropdown.id = `c${id}`;
-                contractDropdown.onchange = function (event) { changeConCondition(id, event.target.value) }
-                const contDefault = document.createElement('option');
-                contDefault.value = "";
-                contDefault.disabled = true;
-                contDefault.defaultSelected = true;
-                contDefault.innerText = "- Select option -";
-                contractDropdown.appendChild(contDefault);
-                const inStore = document.createElement('option');
-                inStore.value = "instore";
-                inStore.innerText = "Contract is in store";
-                contractDropdown.appendChild(inStore);
-                const phAlloc = document.createElement('option');
-                phAlloc.value = "phoneallocated";
-                phAlloc.innerText = "Phone is in store";
-                contractDropdown.appendChild(phAlloc);
-                const noContract = document.createElement('option');
-                noContract.value = "nocontract";
-                noContract.innerText = "Missing phone and contract";
-                contractDropdown.appendChild(noContract);
-                contract.appendChild(contractDropdown);
-                tr.appendChild(contract);
-
-                const date = document.createElement('td');
-                const datePicker = document.createElement('input');
-                datePicker.type = "date";
-                datePicker.onchange = function (event) {
-                    audit.allocated[id].duedate = event.target.value;
-                    changeConCondition(id, document.getElementById(`c${id}`).value);
-                }
-                date.id = `d${id}`;
-                date.appendChild(datePicker);
-                tr.appendChild(date);
-
-                const actionreq = document.createElement('td');
-                actionreq.id = `ar${id}`;
-                tr.appendChild(actionreq);
-
-                const actiontaken = document.createElement('td');
-                actiontaken.id = `at${id}`;
-                const comment = document.createElement('input');
-                comment.type = "text";
-                comment.oninput = function (event) {
-                    audit.allocated[id].notes = event.target.value;
-                };
-                actiontaken.appendChild(comment);
-                tr.appendChild(actiontaken);
-
-                alTableBody.appendChild(tr);
-            });
-
-            function changePhCondition(id, value) {
-                var td = document.getElementById(`ar${id}`);
-                switch (value) {
-                    case 'good':
-                        td.innerText = "No action required";
-                        break;
-                    case 'damaged':
-                        td.innerText = "Charge customer and contact Retail Ops";
-                        break;
-                    case 'lost':
-                        td.innerText = "Contact Retail Ops to remove";
-                        break;
-                }
-                audit.available[id].condition = value;
-                audit.available[id].actionreq = td.innerText;
-            }
-
-            function changeConCondition(id, value) {
-                var artd = document.getElementById(`ar${id}`);
-                let diff = Math.round((new Date(audit.allocated[id].duedate) - today) / (1000 * 3600 * 24));
-
-                switch (value) {
-                    case 'instore':
-                        if (!audit.allocated[id].duedate) {
-                            artd.innerText = "Select due date";
-                        } else if (diff > 0) {
-                            artd.innerText = "No action required";
-                        } else if (diff > -14) {
-                            artd.innerText = "Contact customer to return device.\nReissue loan if required.";
-                        } else {
-                            artd.innerText = "Contact customer to return device.\nBlacklist and charge customer after 3 days.";
-                        }
-                        break;
-                    case 'phoneallocated':
-                        artd.innerText = "Return device in Pronto";
-                        break;
-                    case 'nocontract':
-                        artd.innerText = "Investigation needed";
-                        break;
-                }
-                audit.allocated[id].condition = value;
-                audit.allocated[id].actionreq = artd.innerText;
-            }
-
-        }
-
-        function downloadLoanReport() {
-            let fileContent = `Loan Phone Audit,${today.toLocaleDateString('en-NZ')}\n`;
-            fileContent += "Available\n";
-            fileContent += "Name,Item,IMEI,Scanned,Condition,Action required,Notes / action taken\n";
-            Object.entries(audit.available).forEach(([id, av]) => {
-                fileContent += `${av.name},${av.model},${id},${av.scanned ? "Yes" : "No"},${av.condition},${av.actionreq},"${av.notes}"\n`;
-            });
-            fileContent += "Allocated\n";
-            fileContent += "Name,Item,IMEI,Condition,Due date,Action required,Notes / action taken\n";
-            Object.entries(audit.allocated).forEach(([id, al]) => {
-                fileContent += `${al.name},${al.model},${id},${al.condition},${al.duedate},${al.actionreq},"${al.notes}"\n`;
-            });
-            console.log(fileContent);
-
-            console.log(audit);
         }
     </script>
 
