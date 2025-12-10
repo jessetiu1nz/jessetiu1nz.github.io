@@ -1,4 +1,14 @@
 # Changelog | Jesse's Toolkit
+## 2.3
+*2025-12-25*
+- Added: Pronto Discounts template
+- Added: K-hub links to templates
+- Removed: All Loan Audit WIP
+- Refactoring
+    - Consolidated copy2clipboard function
+    - Removed unused code and dependencies (excluding colours)
+    - Other minor refactoring
+
 ## 2.2
 *2025-11-25*
 - Added: SIM Swap template Overseas Passport now provides a textbox to input the country.
