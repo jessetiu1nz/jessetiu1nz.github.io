@@ -1,4 +1,12 @@
 # Changelog | Jesse's Toolkit
+## 3.0
+*2026-01-04*
+- Added: Siebel Discounts template
+- Added: KPI report Hide/show commissions
+- Added: Copy to clipboard responsiveness
+- Added: Tab switching responsiveness
+- Significant UI improvements
+
 ## 2.3
 *2025-12-25*
 - Added: Pronto Discounts template
