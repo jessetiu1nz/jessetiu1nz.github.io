@@ -1,5 +1,8 @@
 # Changelog | Jesse's Toolkit
 ## 3.0
+*2026-02-12*
+- Added: Sales toolkit link to Siebel Discounts Template
+
 *2026-01-04*
 - Added: Siebel Discounts template
 - Added: KPI report Hide/show commissions
