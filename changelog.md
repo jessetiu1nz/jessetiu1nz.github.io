@@ -1,5 +1,8 @@
 # Changelog | Jesse's Toolkit
 ## 3.0
+*2026-02-13*
+- Added: Clear fields buttons to templates
+
 *2026-02-12*
 - Added: Sales toolkit link to Siebel Discounts Template
 
