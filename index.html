@@ -1001,7 +1001,9 @@ Approved by:
                                 onclick="copy2clipboard(sim_textbox.value, this)" disabled>
                                 Copy to clipboard
                             </button>
-
+                            <button class="copy-btn" onclick="clearForm('simswap')">
+                                Clear fields
+                            </button>
                         </td>
                     </tr>
                 </table>
@@ -1064,8 +1066,9 @@ Reason for credit:
                                 disabled>
                                 Copy to clipboard
                             </button>
-
-
+                            <button class="copy-btn" onclick="clearForm('sr')">
+                                Clear fields
+                            </button>
                         </td>
                     </tr>
                 </table>
@@ -1127,8 +1130,8 @@ Reason for credit:
                         <td>Approval:</td>
                         <td>
                             <label for="prontodisc_noapprover"><input type="radio" name="prontodisc_approver"
-                                    id="prontodisc_noapprover" onclick="prontodisc_textUpdate()" value="none"
-                                    checked>None</label>
+                                    id="prontodisc_noapprover" onclick="prontodisc_textUpdate()"
+                                    value="none">None</label>
                             <label for="prontodisc_retaillead"><input type="radio" name="prontodisc_approver"
                                     id="prontodisc_retaillead" onclick="prontodisc_textUpdate()"
                                     value="retaillead">Retail Lead</label>
@@ -1156,8 +1159,9 @@ Notes:
                                 onclick="copy2clipboard(prontodisc_textbox.value, this)" disabled>
                                 Copy to clipboard
                             </button>
-
-
+                            <button class="copy-btn" onclick="clearForm('prontodisc')">
+                                Clear fields
+                            </button>
                         </td>
                     </tr>
                 </table>
@@ -1168,18 +1172,17 @@ Notes:
                         <td colspan="2">
                             <div style="float: right; text-align: right;">
                                 <a href="https://k-hub.vodafone.nz/consumer-exclusive-siebel-discounts"
-                                   target="_blank">K-hub link</a><br>
+                                    target="_blank">K-hub link</a><br>
                                 <a href="https://ahunga.sharepoint.com/sites/SalesToolkits/Lists/Toolkits/AllItems.aspx"
-                                   target="_blank"
-                                   style="margin-top: 4px; display: inline-block;">
-                                   Sales Toolkits
+                                    target="_blank" style="margin-top: 4px; display: inline-block;">
+                                    Sales Toolkits
                                 </a>
                             </div>
                             <h2>Siebel Discounts</h2>
                         </td>
                     </tr>
                     <tr>
-                        <td>ID Type:</td>
+                        <td>Discount Type:</td>
                         <td>
                             <label for="siebeldisc_passport"><input type="radio" name="siebeldisc_idtype"
                                     id="siebeldisc_passport" onclick="siebeldisc_textUpdate()"
@@ -1251,6 +1254,9 @@ Biometrics Transaction ID:
                                 data-tooltip="Copy text to clipboard"
                                 onclick="copy2clipboard(siebeldisc_textbox.value, this)" disabled>
                                 Copy to clipboard
+                            </button>
+                            <button class="copy-btn" onclick="clearForm('siebeldisc')">
+                                Clear fields
                             </button>
                         </td>
                     </tr>
@@ -1334,6 +1340,51 @@ Biometrics Transaction ID:
             navigator.clipboard.writeText(text)
                 .then(() => showCopiedState(btn))
                 .catch(err => alert("Failed to copy text: " + err));
+        }
+
+        function clearForm(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (!section) return;
+
+            // Reset all inputs
+            section.querySelectorAll("input").forEach(input => {
+                if (input.type === "radio" || input.type === "checkbox") {
+                    input.checked = false;
+                } else if (input.type !== "file") {
+                    input.value = "";
+                }
+            });
+
+            // Reset selects
+            section.querySelectorAll("select").forEach(select => {
+                select.selectedIndex = 0;
+            });
+
+            // Clear textareas
+            section.querySelectorAll("textarea").forEach(textarea => {
+                textarea.value = "";
+            });
+
+            // Disable copy-to-clipboard button
+            section.querySelectorAll("[id$='copybutton'], #copytext").forEach(btn => {
+                btn.disabled = true;
+            });
+
+
+            // Re-run specific update logic to restore defaults properly
+            if (sectionId === "simswap") {
+                document.getElementById("sim_general").checked = true;
+                sim_esimUpdate(false);
+                sim_update();
+            }
+
+            if (sectionId === "sr") {
+                document.getElementById("sr_credit").checked = true;
+                sr_textUpdate();
+            }
+
+            if (sectionId === "prontodisc") prontodisc_textUpdate();
+            if (sectionId === "siebeldisc") siebeldisc_textUpdate();
         }
 
         function setActiveTab(mode) {
@@ -2216,5 +2267,3 @@ Biometrics Transaction ID:
 </body>
 
 </html>
-
-
