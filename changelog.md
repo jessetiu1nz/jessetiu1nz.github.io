@@ -1,4 +1,8 @@
 # Changelog | Jesse's Toolkit
+## 3.1
+*2026-02-27*
+- Added: GM% to KPI table
+
 ## 3.0
 *2026-02-13*
 - Added: Clear fields buttons to templates
