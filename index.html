@@ -1304,7 +1304,7 @@ Biometrics Transaction ID:
     <script> // General
 
         // Version Info
-        const version = "v3.0";
+        const version = "v3.1";
         const versionElements = document.getElementsByClassName("version");
         for (let i = 0; i < versionElements.length; i++) {
             const v = document.createTextNode(version);
@@ -1682,6 +1682,7 @@ Biometrics Transaction ID:
             rep: "Rep",
             gp: "Gross Profit",
             gm: "Gen Merch",
+            gmperc: "GM %",
 
             coa: "Con OA",
             cfab: "Con FAB",
@@ -1710,7 +1711,7 @@ Biometrics Transaction ID:
                 "subHeadings": ["rep"]
             }, {
                 "heading": "Legends",
-                "subHeadings": ["coa", "boa", "cfab", "bfab", "oneup", "gm"]
+                "subHeadings": ["coa", "boa", "cfab", "bfab", "oneup", "gm", "gmperc"]
             }, {
                 "heading": "GP",
                 "subHeadings": ["gp"]
@@ -2046,8 +2047,13 @@ Biometrics Transaction ID:
                 let tableLine = [];
                 headers.forEach(header => {
                     header.subHeadings.forEach(subHeading => {
-                        tableLine.push(row[subHeading]);
-
+                        if (subHeading === "gmperc") {
+                            const gp = row.gp || 0;
+                            const gm = row.gm || 0;
+                            tableLine.push(gp !== 0 ? gm / gp : 0);
+                        } else {
+                            tableLine.push(row[subHeading]);
+                        }
                     });
                 });
                 preparedTable.push(tableLine);
@@ -2066,6 +2072,17 @@ Biometrics Transaction ID:
                     }
                 }
             });
+
+            const gpIndex = subHeadings.indexOf("gp");
+            const gmIndex = subHeadings.indexOf("gm");
+            const gmPercIndex = subHeadings.indexOf("gmperc");
+
+            if (gpIndex !== -1 && gmIndex !== -1 && gmPercIndex !== -1) {
+                const totalGP = totalsLine[gpIndex] || 0;
+                const totalGM = totalsLine[gmIndex] || 0;
+                totalsLine[gmPercIndex] = totalGP !== 0 ? totalGM / totalGP : 0;
+            }
+
             preparedTable.push(totalsLine); // Add the totals line to the end of the array
 
             return preparedTable;
@@ -2160,6 +2177,18 @@ Biometrics Transaction ID:
             const values = document.getElementsByClassName("currency");
             for (let i = 0; i < values.length; i++) {
                 values[i].textContent = parseFloat(values[i].textContent).toLocaleString('en-NZ', { style: 'currency', currency: 'NZD' });
+            }
+
+            // Format GM % as percentage
+            const percentIndex = subHeadings.indexOf("gmperc");
+            if (percentIndex !== -1) {
+                table.querySelectorAll("tbody tr, tfoot tr").forEach(tr => {
+                    const cell = tr.children[percentIndex];
+                    if (cell) {
+                        const value = parseFloat(cell.textContent);
+                        cell.textContent = (value * 100).toFixed(1) + "%";
+                    }
+                });
             }
 
             document.getElementById('copyright').hidden = false;
