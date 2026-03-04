@@ -1,9 +1,1 @@
-{
-  "team": [
-    {
-      "weekStart": "2026-02-23",
-      "state": { "people": [], "shifts": [] }
-    }
-  ],
-  "lastUpdated": "2026-03-05T00:00:00.000Z"
-}
+{"team":[{"weekStart":"2026-02-23","state":{"people":[{"name":"Maz","count":true},{"name":"Nick","count":true},{"name":"Jesse","count":false}],"shifts":[{"id":"3da270c9-3456-42b7-a99a-9a42e151a8ad","person":"Jesse","date":"2026-02-23","leaveType":"","start":"8:30am","end":"5pm","breakMins":30,"location":"NorthWest","overtime":"no","notes":""},{"id":"bef7ea26-8b65-42d7-bbfd-7d526af5e229","person":"Jesse","date":"2026-02-24","leaveType":"Leave","start":"","end":"","breakMins":0,"location":"","overtime":"no","notes":"Sick leave"},{"id":"21422e1e-999b-4ff5-be62-d1ef4639104d","person":"Jesse","date":"2026-02-25","leaveType":"Leave","start":"","end":"","breakMins":0,"location":"","overtime":"no","notes":"Annual Leave"},{"id":"5fbca006-4b44-41fd-8d08-a2044c7e9fa7","person":"Jesse","date":"2026-02-27","leaveType":"","start":"7:30am","end":"4pm","breakMins":30,"location":"NorthWest","overtime":"no","notes":"Stocktake"},{"id":"ae644278-cd43-4259-a092-fb6a67c39fd5","person":"Jesse","date":"2026-03-03","leaveType":"Leave","start":"","end":"","breakMins":0,"location":"","overtime":"no","notes":"Sick leave"},{"id":"c780c70b-06d9-4a4b-a4d1-c30195746abc","person":"Jesse","date":"2026-03-04","leaveType":"Leave","start":"","end":"","breakMins":0,"location":"","overtime":"no","notes":"Annual Leave"},{"id":"687c18ab-f725-49c2-b631-a64d10940640","person":"Jesse","date":"2026-03-05","leaveType":"","start":"7:30am","end":"4pm","breakMins":30,"location":"NorthWest","overtime":"no","notes":"Stocktake"},{"id":"253833d2-5b7e-4216-a120-50aa9fa3562b","person":"Nick","date":"2026-02-23","leaveType":"","start":"9:30am","end":"6pm","breakMins":30,"location":"NorthWest","overtime":"no","notes":""},{"id":"ea27e60a-a707-4ff0-9762-f8c5c547fd4a","person":"Nick","date":"2026-02-24","leaveType":"","start":"9:30am","end":"6pm","breakMins":30,"location":"NorthWest","overtime":"no","notes":""}]}}],"lastUpdated":"2026-03-04T21:16:06.614Z"}
