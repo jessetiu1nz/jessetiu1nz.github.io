@@ -2,731 +2,644 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NorthWest Weekly Roster</title>
-  <style>
-    :root {
-      --bg1: #f7fbff;
-      --bg2: #f3fff9;
-      --card: #ffffff;
-      --card2: #fbfeff;
-      --text: #0b1220;
-      --muted: #4b607a;
-      --line: #d5e5f2;
-      --shadow: 0 18px 40px rgba(15, 40, 70, .10);
-      --locA: #22c1b2;
-      --locO: #ffb020;
-      --leave: #8b5cf6;
-      --header-bg: rgba(255, 255, 255, .92);
-    }
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>NorthWest Weekly Roster — Read-only</title>
+    <style>
+        /* --- (this chunk copies the CSS from your attached file so the look matches) --- */
+        :root {
+            --bg1: #f7fbff;
+            --bg2: #f3fff9;
+            --card: #ffffff;
+            --card2: #fbfeff;
+            --text: #0b1220;
+            --muted: #4b607a;
+            --line: #d5e5f2;
+            --danger: #e53955;
+            --shadow: 0 18px 40px rgba(15, 40, 70, 0.10);
+            --locA: #22c1b2;
+            --locO: #ffb020;
+            --leave: #9aa0a6;
+            --teal: #22c1b2;
+            --blue: #2a7be4;
+            --green: #22c55e;
+            --purple: #8b5cf6;
+            --yellow: #ffb020;
+        }
 
-    * {
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif
-    }
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif
+        }
 
-    body {
-      margin: 0;
-      color: var(--text);
-      background:
-        radial-gradient(900px 600px at 15% 0%, rgba(34, 193, 178, .18), transparent 55%),
-        radial-gradient(900px 600px at 85% 0%, rgba(42, 123, 228, .16), transparent 55%),
-        radial-gradient(900px 700px at 50% 120%, rgba(255, 176, 32, .14), transparent 55%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
-    }
+        body {
+            margin: 0;
+            color: var(--text);
+            background: radial-gradient(900px 600px at 15% 0%, rgba(34, 193, 178, .18), transparent 55%), radial-gradient(900px 600px at 85% 0%, rgba(42, 123, 228, .16), transparent 55%), radial-gradient(900px 700px at 50% 120%, rgba(255, 176, 32, .14), transparent 55%), linear-gradient(180deg, var(--bg1), var(--bg2));
+        }
 
-    .wrap {
-      max-width: 1550px;
-      margin: 22px auto;
-      padding: 0 16px
-    }
+        .wrap {
+            max-width: 1550px;
+            margin: 22px auto;
+            padding: 0 16px
+        }
 
-    h1 {
-      margin: 0 0 6px;
-      font-size: 20px;
-      font-weight: 750
-    }
+        h1 {
+            margin: 0 0 6px;
+            font-size: 20px;
+            font-weight: 750
+        }
 
-    .sub {
-      margin: 0 0 14px;
-      color: var(--muted);
-      font-size: 13px
-    }
+        .sub {
+            margin: 0 0 14px;
+            color: var(--muted);
+            font-size: 13px
+        }
 
-    .topbar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: end;
-      justify-content: space-between;
-      margin-bottom: 12px
-    }
+        .topbar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: end;
+            justify-content: space-between;
+            margin-bottom: 12px
+        }
 
-    .row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: end
-    }
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: end
+        }
 
-    label {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      margin: 0 0 6px
-    }
+        label {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            margin: 5px 0 5px
+        }
 
-    input {
-      background: rgba(255, 255, 255, .92);
-      border: 1px solid var(--line);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 9px 10px;
-      font-size: 13px;
-      outline: none;
-    }
+        input,
+        select,
+        textarea {
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid var(--line);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 9px 10px;
+            font-size: 13px;
+            outline: none;
+            transition: border-color .12s ease, box-shadow .12s ease;
+        }
 
-    input:focus {
-      border-color: rgba(42, 123, 228, .55);
-      box-shadow: 0 0 0 4px rgba(42, 123, 228, .10);
-    }
+        textarea {
+            resize: vertical;
+            min-height: 72px
+        }
 
-    .field {
-      min-width: 160px;
-      flex: 1
-    }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: rgba(42, 123, 228, .55);
+            box-shadow: 0 0 0 4px rgba(42, 123, 228, .10)
+        }
 
-    .field.small {
-      min-width: 120px;
-      flex: 0 0 auto
-    }
+        .field {
+            min-width: 160px;
+            flex: 1
+        }
 
-    .btn {
-      border: none;
-      padding: 9px 12px;
-      border-radius: 12px;
-      font-weight: 750;
-      cursor: pointer;
-      background: #ffffff;
-      color: var(--text);
-      border: 1px solid var(--line);
-      box-shadow: none;
-    }
+        .field.small {
+            min-width: 120px;
+            flex: 0 0 auto
+        }
 
-    .card {
-      background: linear-gradient(180deg, var(--card), var(--card2));
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      box-shadow: var(--shadow);
-    }
+        .btn {
+            border: none;
+            padding: 9px 12px;
+            border-radius: 12px;
+            font-weight: 750;
+            cursor: pointer;
+            background: linear-gradient(135deg, rgba(34, 193, 178, 1), rgba(42, 123, 228, 1));
+            color: #ffffff;
+            box-shadow: 0 10px 22px rgba(42, 123, 228, .18);
+        }
 
-    /* Weekly table */
-    .tableWrap {
-      overflow: auto;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      margin-top: 12px
-    }
+        .btn.ghost {
+            background: #ffffff;
+            color: var(--text);
+            border: 1px solid var(--line);
+            box-shadow: none;
+            font-weight: 750;
+        }
 
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0
-    }
+        .card {
+            background: linear-gradient(180deg, var(--card), var(--card2));
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 14px;
+            box-shadow: var(--shadow);
+        }
 
-    thead th {
-      position: sticky;
-      top: 0;
-      z-index: 3;
-      background: var(--header-bg);
-      border-bottom: 1px solid var(--line);
-      padding: 8px 6px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 700;
-    }
+        .tableWrap {
+            overflow: auto;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            margin-top: 12px
+        }
 
-    thead th:first-child {
-      left: 0;
-      position: sticky;
-      z-index: 4
-    }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0
+        }
 
-    tbody td,
-    tbody th,
-    tfoot td,
-    tfoot th {
-      border-bottom: 1px solid rgba(213, 229, 242, .9);
-      padding: 8px 8px;
-      vertical-align: top;
-      font-size: 13px;
-      background: rgba(255, 255, 255, .72);
-    }
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--line);
+            padding: 10px 6px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700
+        }
 
-    tbody th {
-      position: sticky;
-      left: 0;
-      z-index: 2;
-      background: rgba(255, 255, 255, .92);
-      border-right: 1px solid var(--line);
-      min-width: 170px;
-      max-width: 220px;
-      vertical-align: middle;
-    }
+        thead th:first-child {
+            left: 0;
+            position: sticky;
+            z-index: 3
+        }
 
-    .personTitle {
-      font-weight: 650;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+        tbody td,
+        tbody th,
+        tfoot td,
+        tfoot th {
+            border-bottom: 1px solid rgba(213, 229, 242, .9);
+            padding: 8px 5px;
+            vertical-align: middle;
+            font-size: 13px;
+            background: rgba(255, 255, 255, .72)
+        }
 
-    .cell {
-      min-width: 150px;
-      cursor: default;
-    }
+        tbody th {
+            padding-left: 16px;
+            position: sticky;
+            left: 0;
+            background: rgba(255, 255, 255, .92);
+            border-right: 1px solid var(--line);
+            min-width: 120px;
+            max-width: 180px;
+            z-index: 1
+        }
 
-    .mono {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace
-    }
+        /* Shift cells align top */
+        tbody td {
+            vertical-align: top;
+        }
 
-    /* Chips are read-only */
-    .chips {
-      display: flex;
-      gap: 8px;
-      flex-direction: column
-    }
+        .personName {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px
+        }
 
-    .chip {
-      border-radius: 14px;
-      padding: 8px 10px;
-      box-shadow: 0 10px 22px rgba(15, 40, 70, .06);
-      border: 1px solid rgba(0, 0, 0, .06);
-      cursor: default;
-      user-select: text;
-    }
+        .nameRow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0
+        }
 
-    .chip.locA {
-      background: rgba(34, 193, 178, .16);
-      border-color: rgba(34, 193, 178, .30)
-    }
+        .personTitle {
+            font-weight: 650;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: text;
+            min-width: 0
+        }
 
-    .chip.locO {
-      background: rgba(255, 176, 32, .18);
-      border-color: rgba(255, 176, 32, .35)
-    }
+        .chips {
+            display: flex;
+            gap: 3px;
+            flex-direction: column
+        }
 
-    .chip.leave {
-      background: rgba(139, 92, 246, .16);
-      border-color: rgba(139, 92, 246, .30)
-    }
+        .chip {
+            border-radius: 14px;
+            padding: 8px 10px;
+            box-shadow: 0 10px 22px rgba(15, 40, 70, .06);
+            cursor: default;
+            border: 1px solid rgba(0, 0, 0, .06)
+        }
 
-    .chipRow {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px
-    }
+        .chip.locA {
+            background: rgba(34, 193, 178, .16);
+            border-color: rgba(34, 193, 178, .30)
+        }
 
-    .chipMain {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      min-width: 0
-    }
+        .chip.locO {
+            background: rgba(255, 176, 32, .18);
+            border-color: rgba(255, 176, 32, .35)
+        }
 
-    .chipTime {
-      font-weight: 560;
-      white-space: nowrap
-    }
+        .chip.leave {
+            background: rgba(154, 160, 166, .18);
+            border-color: rgba(154, 160, 166, .35)
+        }
 
-    .chipLoc {
-      color: rgba(11, 18, 32, .75);
-      font-size: 12px
-    }
+        .chip.tint-teal {
+            background: rgba(34, 193, 178, .16);
+            border-color: rgba(34, 193, 178, .30)
+        }
 
-    .chipNotes {
-      color: rgba(11, 18, 32, .70);
-      font-size: 11px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 380px
-    }
+        .chip.tint-blue {
+            background: rgba(42, 123, 228, .16);
+            border-color: rgba(42, 123, 228, .30)
+        }
 
-    .badges {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      flex-wrap: wrap;
-      justify-content: flex-end
-    }
+        .chip.tint-green {
+            background: rgba(34, 197, 94, .16);
+            border-color: rgba(34, 197, 94, .30)
+        }
 
-    .badge {
-      font-size: 11px;
-      border: 1px solid rgba(11, 18, 32, .14);
-      padding: 1px 7px;
-      border-radius: 999px;
-      color: rgba(11, 18, 32, .75);
-      background: rgba(255, 255, 255, .55);
-      white-space: nowrap;
-    }
+        .chip.tint-purple {
+            background: rgba(139, 92, 246, .16);
+            border-color: rgba(139, 92, 246, .30)
+        }
 
-    .badge.ot {
-      border-color: rgba(42, 123, 228, .35);
-      color: #1f5fb6
-    }
+        .chip.tint-yellow {
+            background: rgba(255, 176, 32, .18);
+            border-color: rgba(255, 176, 32, .35)
+        }
 
-    /* Daily totals footer */
-    #weekTable tfoot th,
-    #weekTable tfoot td {
-      position: sticky;
-      bottom: 0;
-      z-index: 2;
-      background: rgba(245, 249, 255, .9);
-      border-top: 1px solid var(--line);
-      padding: 10px 10px;
-      vertical-align: top;
-    }
+        .chipRow {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 3px
+        }
 
-    #weekTable tfoot th {
-      left: 0;
-      position: sticky;
-      z-index: 3;
-      border-right: 1px solid var(--line);
-      text-align: left
-    }
+        .chipMain {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0
+        }
 
-    .totalsBox {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 12px
-    }
+        .chipTime {
+            font-weight: 560;
+            white-space: nowrap
+        }
 
-    .totLine {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px
-    }
+        .chipLoc {
+            color: rgba(11, 18, 32, .75);
+            font-size: 12px
+        }
 
-    .totLabel {
-      font-weight: 650
-    }
+        .chipNotes {
+            color: rgba(11, 18, 32, .70);
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px
+        }
 
-    .totLabel.locA {
-      color: var(--locA)
-    }
+        .badges {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: flex-end
+        }
 
-    .totLabel.other {
-      color: var(--locO)
-    }
+        .badge {
+            font-size: 11px;
+            border: 1px solid rgba(11, 18, 32, .14);
+            padding: 1px 7px;
+            border-radius: 999px;
+            color: rgba(11, 18, 32, .75);
+            background: rgba(255, 255, 255, .55);
+            white-space: nowrap
+        }
 
-    .totLabel.leave {
-      color: var(--leave)
-    }
+        .badge.ot {
+            border-color: rgba(42, 123, 228, .35);
+            color: #1f5fb6;
+            background: rgba(255, 255, 255, .55)
+        }
 
-    /* Summary card */
-    .summaryCard {
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(243, 255, 249, .55);
-      box-shadow: 0 8px 18px rgba(15, 40, 70, .05);
-      margin: 12px auto 0;
-      width: fit-content;
-      padding: 8px 10px;
-    }
+        tfoot th,
+        tfoot td {
+            position: sticky;
+            bottom: 0;
+            z-index: 2;
+            background: rgba(255, 255, 255, .92);
+            backdrop-filter: blur(6px);
+            border-top: 1px solid var(--line);
+        }
 
-    .summaryTable {
-      width: auto;
-      border-collapse: collapse;
-      table-layout: auto
-    }
+        tfoot th {
+            left: 0;
+            position: sticky;
+            z-index: 3;
+            border-right: 1px solid var(--line);
+            font-weight: 750;
+            color: var(--muted);
+        }
 
-    .summaryTable th,
-    .summaryTable td {
-      padding: 4px 8px;
-      font-size: 13px
-    }
+        .totalsBox {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 12px
+        }
 
-    .summaryTable th:nth-child(n+2),
-    .summaryTable td:nth-child(n+2) {
-      text-align: center
-    }
+        .totLine {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 0 4px
+        }
 
-    .summaryWeek {
-      text-align: center;
-      font-weight: 700;
-      font-size: 13px;
-      padding: 0 0 8px 0;
-      color: var(--muted)
-    }
+        .totLine b {
+            color: var(--text)
+        }
 
-    .hint {
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 6px
-    }
-  </style>
+        .totLabel {
+            font-weight: 650
+        }
+
+        .totLabel.locA {
+            color: var(--locA)
+        }
+
+        .totLabel.other {
+            color: var(--locO)
+        }
+
+        .totLabel.leave {
+            color: var(--leave)
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace
+        }
+
+        .summaryCard {
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: rgba(243, 255, 249, .55);
+            box-shadow: 0 8px 18px rgba(15, 40, 70, .05);
+            margin: 12px auto 0;
+            width: fit-content;
+            padding: 8px 10px
+        }
+
+        .summaryTable {
+            width: auto;
+            border-collapse: collapse;
+            table-layout: fixed
+        }
+
+        .summaryWeek {
+            text-align: center;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 0 0 8px 0;
+            color: var(--muted)
+        }
+
+        td.cell {
+            cursor: default;
+        }
+
+        .chip {
+            cursor: default;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <h1>NorthWest Weekly Roster</h1>
+    <div class="wrap">
+        <h1>NorthWest Weekly Roster</h1>
 
-    <div class="topbar">
-      <div class="row">
-        <div class="field small">
-          <label>Week start (Mon)</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <input id="weekStart" type="date" style="min-width:160px">
-            <div style="display:flex;gap:6px;align-items:center">
-              <button class="btn" id="prevWeek" title="Previous week" style="padding:9px 10px">←</button>
-              <button class="btn" id="nextWeek" title="Next week" style="padding:9px 10px">→</button>
+        <div class="topbar">
+            <div class="row">
+                <div class="field small">
+                    <label id="weekStartLabel">Week start (Mon)</label>
+                    <div style="display:flex;gap:8px;align-items:center">
+                        <input id="weekStart" type="date" style="min-width:160px" />
+                        <div style="display:flex;gap:6px;align-items:center">
+                            <button class="btn ghost" id="prevWeek" title="Previous week"
+                                style="padding:9px 10px">←</button>
+                            <button class="btn ghost" id="nextWeek" title="Next week"
+                                style="padding:9px 10px">→</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="card">
-      <div class="tableWrap" id="gridWrap">
-        <table id="weekTable">
-          <thead>
-            <tr id="headRow">
-              <th>Employee</th>
-            </tr>
-          </thead>
-          <tbody id="bodyRows"></tbody>
-          <tfoot id="totalsFoot"></tfoot>
-        </table>
-      </div>
+        <div class="card">
+            <div id="msg" class="msg"></div>
 
-      <div class="summaryCard">
-        <table class="summaryTable" id="summary">
-          <thead>
-            <tr>
-              <th>Employee</th>
-              <th>Hours</th>
-              <th>Overtime</th>
-              <th>Leave days</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    (() => {
-      const $ = (id) => document.getElementById(id);
-      const MAIN_LOCATION = "NorthWest";
-      const PUBLIC_JSON_URL = "../data/roster.json";
-
-      let state = { people: [], shifts: [] };
-
-      function pad(n) { return String(n).padStart(2, "0"); }
-      function toISODate(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
-      function addDays(iso, delta) {
-        const d = new Date(iso + "T00:00:00");
-        d.setDate(d.getDate() + delta);
-        return toISODate(d);
-      }
-      function formatDdMmm(iso) {
-        const d = new Date(iso + "T00:00:00");
-        return new Intl.DateTimeFormat("en-NZ", { day: "2-digit", month: "short" }).format(d);
-      }
-      function escapeHtml(s) {
-        return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-      }
-
-      function parseFlexibleTimeToMinutes(str) {
-        if (!str) return null;
-        let s = String(str).trim().toLowerCase();
-        s = s.replace(/\s+/g, "").replace(/\./g, ":");
-        let ampm = null;
-        const mAmpm = s.match(/(am|pm)$/);
-        if (mAmpm) { ampm = mAmpm[1]; s = s.replace(/(am|pm)$/, ""); }
-        if (/^\d{3,4}$/.test(s)) {
-          const digits = s.padStart(4, "0");
-          const h = Number(digits.slice(0, 2)), m = Number(digits.slice(2, 4));
-          if (m > 59) return null;
-          return applyAmpm(h, m, ampm);
-        }
-        if (/^\d{1,2}$/.test(s)) {
-          const h = Number(s); return applyAmpm(h, 0, ampm);
-        }
-        const mColon = s.match(/^(\d{1,2}):(\d{2})$/);
-        if (mColon) {
-          const h = Number(mColon[1]), m = Number(mColon[2]);
-          if (m > 59) return null;
-          return applyAmpm(h, m, ampm);
-        }
-        return null;
-      }
-      function applyAmpm(h, m, ampm) {
-        if (h < 0 || h > 24) return null;
-        if (ampm) {
-          if (h === 12) h = 0;
-          if (ampm === "pm") h += 12;
-        }
-        if (h === 24) h = 0;
-        return h * 60 + m;
-      }
-      function minutesTo12h(mins) {
-        let h = Math.floor(mins / 60) % 24;
-        const m = mins % 60;
-        const ampm = (h >= 12) ? "PM" : "AM";
-        h = h % 12; if (h === 0) h = 12;
-        return `${h}:${String(m).padStart(2, "0")} ${ampm}`;
-      }
-      function normalizeTimeForDisplay(str) {
-        const mins = parseFlexibleTimeToMinutes(str);
-        if (mins == null) return String(str || "");
-        return minutesTo12h(mins);
-      }
-      function computeShiftMinutes(s) {
-        if (s.leaveType) return 0;
-        const st = parseFlexibleTimeToMinutes(s.start);
-        const en = parseFlexibleTimeToMinutes(s.end);
-        if (st == null || en == null) return 0;
-        let dur = en - st; if (dur < 0) dur += 24 * 60;
-        dur -= (Number(s.breakMins) || 0);
-        return Math.max(0, dur);
-      }
-      function chipClassForShift(s) {
-        if (s.leaveType) return "leave";
-        if ((s.location || "").trim() === MAIN_LOCATION || (s.location || "").trim() === "Main") return "locA";
-        return "locO";
-      }
-
-      function setDefaultDates() {
-        const now = new Date();
-        const day = now.getDay();
-        const diffToMon = (day === 0 ? -6 : 1 - day);
-        const mon = new Date(now);
-        mon.setDate(now.getDate() + diffToMon);
-        if (!$("weekStart").value) $("weekStart").value = toISODate(mon);
-      }
-
-      function weekDates() {
-        const ws = $("weekStart").value;
-        return Array.from({ length: 7 }, (_, i) => addDays(ws, i));
-      }
-
-      function shiftsFor(person, date) {
-        return state.shifts
-          .filter(s => s.person === person && s.date === date)
-          .sort((a, b) => (String(a.start || "")).localeCompare(String(b.start || "")));
-      }
-
-      function renderHeaders() {
-        const headRow = $("headRow");
-        headRow.innerHTML = `<th>Employee</th>`;
-        for (const d of weekDates()) {
-          const th = document.createElement("th");
-          const dayShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][new Date(d + "T00:00:00").getDay()];
-          th.innerHTML = `${dayShort}<div class="mono" style="color:rgba(75,96,122,.7);font-size:11px;margin-top:2px">${formatDdMmm(d)}</div>`;
-          headRow.appendChild(th);
-        }
-      }
-
-      function computeDailyTotals() {
-        const days = weekDates();
-        const totals = {};
-        for (const d of days) totals[d] = { main: new Set(), offsite: new Set(), leave: new Set() };
-
-        // If 'count' exists, respect it; otherwise include everyone.
-        const include = new Set(state.people.filter(p => p.count !== false).map(p => p.name));
-
-        for (const s of state.shifts) {
-          if (!include.has(s.person)) continue;
-          if (!totals[s.date]) continue;
-          if (s.leaveType) {
-            totals[s.date].leave.add(s.person);
-          } else {
-            const loc = (s.location || "").trim();
-            if (loc === MAIN_LOCATION || loc === "Main") totals[s.date].main.add(s.person);
-            else totals[s.date].offsite.add(s.person);
-          }
-        }
-        const out = {};
-        for (const d of days) {
-          out[d] = { main: totals[d].main.size, offsite: totals[d].offsite.size, leave: totals[d].leave.size };
-        }
-        return out;
-      }
-
-      function renderDailyTotals() {
-        const tfoot = $("totalsFoot"); if (!tfoot) return;
-        const days = weekDates();
-        const totals = computeDailyTotals();
-
-        const tr = document.createElement("tr");
-        const th = document.createElement("th");
-        th.textContent = "Daily totals";
-        tr.appendChild(th);
-
-        for (const d of days) {
-          const td = document.createElement("td");
-          const t = totals[d];
-          td.innerHTML = `
-            <div class="totalsBox">
-              <div class="totLine"><span class="totLabel locA">${escapeHtml(MAIN_LOCATION)}</span><span class="mono">${t.main}</span></div>
-              <div class="totLine"><span class="totLabel other">Off-site</span><span class="mono">${t.offsite}</span></div>
-              <div class="totLine"><span class="totLabel leave">Leave</span><span class="mono">${t.leave}</span></div>
+            <div class="tableWrap" id="gridWrap">
+                <table id="weekTable">
+                    <thead>
+                        <tr id="headRow">
+                            <th>Employee</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyRows"></tbody>
+                    <tfoot id="totalsFoot"></tfoot>
+                </table>
             </div>
-          `;
-          tr.appendChild(td);
-        }
-        tfoot.innerHTML = "";
-        tfoot.appendChild(tr);
-      }
 
-      function renderGrid() {
-        renderHeaders();
-        const tbody = $("bodyRows");
-        tbody.innerHTML = "";
-        const days = weekDates();
+            <div class="summaryCard">
+                <table class="summaryTable" id="summary">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-        for (const personObj of (state.people || [])) {
-          const p = personObj.name;
-          const tr = document.createElement("tr");
+    <script>
+        (() => {
+            const PUBLIC_JSON_URL = "https://jessetiu1nz.github.io/nw/roster/data/roster.json";
+            const MAIN_LOCATION = "NorthWest";
 
-          const th = document.createElement("th");
-          th.innerHTML = `<div class="personTitle" title="${escapeHtml(p)}">${escapeHtml(p)}</div>`;
-          tr.appendChild(th);
+            // small helper functions (same logic as your file)
+            function pad(n) { return String(n).padStart(2, '0'); }
+            function toISODate(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
+            function addDays(iso, delta) { const d = new Date(iso + 'T00:00:00'); d.setDate(d.getDate() + delta); return toISODate(d); }
+            function formatDdMmm(iso) { const d = new Date(iso + 'T00:00:00'); return new Intl.DateTimeFormat('en-NZ', { day: '2-digit', month: 'short' }).format(d); }
+            function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 
-          for (const d of days) {
-            const td = document.createElement("td");
-            td.className = "cell";
+            function parseFlexibleTimeToMinutes(str) {
+                if (!str) return null;
+                let s = String(str).trim().toLowerCase();
+                s = s.replace(/\s+/g, '').replace(/\./g, ':');
+                let ampm = null; const mAmpm = s.match(/(am|pm)$/); if (mAmpm) { ampm = mAmpm[1]; s = s.replace(/(am|pm)$/, ''); }
+                if (/^\d{3,4}$/.test(s)) { const digits = s.padStart(4, '0'); const h = Number(digits.slice(0, 2)); const m = Number(digits.slice(2, 4)); if (m > 59) return null; return applyAmpm(h, m, ampm); }
+                if (/^\d{1,2}$/.test(s)) { const h = Number(s); return applyAmpm(h, 0, ampm); }
+                const mColon = s.match(/^(\d{1,2}):(\d{2})$/);
+                if (mColon) { const h = Number(mColon[1]); const m = Number(mColon[2]); if (m > 59) return null; return applyAmpm(h, m, ampm); }
+                return null;
+            }
+            function applyAmpm(h, m, ampm) { if (h < 0 || h > 24) return null; if (ampm) { if (h === 12) h = 0; if (ampm === 'pm') h += 12; } if (h === 24) h = 0; return h * 60 + m; }
+            function minutesTo12h(mins) { let h = Math.floor(mins / 60) % 24; const m = mins % 60; const ampm = (h >= 12) ? 'PM' : 'AM'; h = h % 12; if (h === 0) h = 12; return `${h}:${String(m).padStart(2, '0')} ${ampm}`; }
+            function normalizeTimeForDisplay(str) { const mins = parseFlexibleTimeToMinutes(str); if (mins == null) return String(str || ''); return minutesTo12h(mins); }
 
-            const list = shiftsFor(p, d);
-            if (list.length) {
-              const chips = document.createElement("div");
-              chips.className = "chips";
+            function computeShiftMinutes(s) { if (s.leaveType) return 0; const st = parseFlexibleTimeToMinutes(s.start); const en = parseFlexibleTimeToMinutes(s.end); if (st == null || en == null) return 0; let dur = en - st; if (dur < 0) dur += 24 * 60; dur -= (Number(s.breakMins) || 0); return Math.max(0, dur); }
 
-              for (const s of list) {
-                const chip = document.createElement("div");
-                chip.className = `chip ${chipClassForShift(s)}`;
+            let state = { people: [], shifts: [] };
 
-                if (s.leaveType) {
-                  chip.innerHTML = `
-                    <div class="chipRow">
-                      <div class="chipMain">
-                        <div class="chipTime">Leave</div>
-                        ${s.notes ? `<div class="chipNotes">${escapeHtml(s.notes)}</div>` : ``}
-                      </div>
-                      <div class="badges"></div>
-                    </div>
-                  `;
-                } else {
-                  const timeLine = `${normalizeTimeForDisplay(s.start)} – ${normalizeTimeForDisplay(s.end)}`;
-                  const loc = (s.location || "Unspecified").trim();
-                  chip.innerHTML = `
-                    <div class="chipRow">
-                      <div class="chipMain">
-                        <div class="chipTime">${escapeHtml(timeLine)}</div>
-                        <div class="chipLoc">${escapeHtml(loc)}</div>
-                        ${s.notes ? `<div class="chipNotes">${escapeHtml(s.notes)}</div>` : ``}
-                      </div>
-                      <div class="badges">
-                        ${s.overtime === "yes" ? `<span class="badge ot">OT</span>` : ``}
-                      </div>
-                    </div>
-                  `;
+            function setDefaultDates() { const now = new Date(); const day = now.getDay(); const diffToMon = (day === 0 ? -6 : 1 - day); const mon = new Date(now); mon.setDate(now.getDate() + diffToMon); document.getElementById('weekStart').value = toISODate(mon); }
+
+            function weekDates() { const ws = document.getElementById('weekStart').value; return Array.from({ length: 7 }, (_, i) => addDays(ws, i)); }
+
+            function updateWeekStartLabel() { const ws = document.getElementById('weekStart').value; if (!ws) return; const d = new Date(ws + 'T00:00:00'); const weekday = new Intl.DateTimeFormat('en-NZ', { weekday: 'short' }).format(d); document.getElementById('weekStartLabel').textContent = `Week start (${weekday})`; }
+
+            function shiftsFor(person, date) { return state.shifts.filter(s => s.person === person && s.date === date).sort((a, b) => String(a.start || '').localeCompare(String(b.start || ''))); }
+
+            function chipClassForShift(s) { if (s.leaveType) return 'leave'; if (s.color) return `tint-${s.color}`; if ((s.location || '').trim() === MAIN_LOCATION) return 'locA'; return 'locO'; }
+
+            function renderHeaders() {
+                const headRow = document.getElementById('headRow');
+                headRow.innerHTML = `<th>Employee</th>`;
+                for (const d of weekDates()) {
+                    const th = document.createElement('th');
+                    const dayShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][new Date(d + 'T00:00:00').getDay()];
+                    th.innerHTML = `${dayShort}<div class="mono" style="color:rgba(75,96,122,.7);font-size:11px;margin-top:2px">${formatDdMmm(d)}</div>`;
+                    headRow.appendChild(th);
                 }
-
-                chips.appendChild(chip);
-              }
-              td.appendChild(chips);
             }
 
-            tr.appendChild(td);
-          }
+            function renderGrid() {
+                renderHeaders();
+                const tbody = document.getElementById('bodyRows');
+                tbody.innerHTML = '';
+                const days = weekDates();
+                for (const personObj of state.people) {
+                    const p = personObj.name;
+                    const tr = document.createElement('tr');
+                    const th = document.createElement('th');
+                    th.innerHTML = `<div class="personName"><div class="nameRow"><div class="personTitle">${escapeHtml(p)}</div></div></div>`;
+                    tr.appendChild(th);
+                    for (const d of days) {
+                        const td = document.createElement('td'); td.className = 'cell';
+                        const list = shiftsFor(p, d);
+                        if (!list.length) {
+                            td.classList.add('empty');
+                            td.innerHTML = `<div class="plus"></div>`;
+                        } else {
+                            const chips = document.createElement('div'); chips.className = 'chips';
+                            for (const s of list) {
+                                const chip = document.createElement('div'); chip.className = `chip ${chipClassForShift(s)}`;
+                                if (s.leaveType) {
+                                    chip.innerHTML = `<div class="chipRow"><div class="chipMain"><div class="chipTime">Leave</div>${s.notes ? `<div class="chipNotes">${escapeHtml(s.notes)}</div>` : ''}</div><div class="badges"></div></div>`;
+                                } else {
+                                    const timeLine = `${normalizeTimeForDisplay(s.start)} – ${normalizeTimeForDisplay(s.end)}`;
+                                    const loc = (s.location || '').trim();
+                                    const showLocation = loc && loc !== MAIN_LOCATION;
+                                    chip.innerHTML = `<div class="chipRow"><div class="chipMain"><div class="chipTime">${escapeHtml(timeLine)}</div>${showLocation ? `<div class="chipLoc">${escapeHtml(loc)}</div>` : ''}${s.notes ? `<div class="chipNotes">${escapeHtml(s.notes)}</div>` : ''}</div><div class="badges">${s.overtime === 'yes' ? `<span class='badge ot'>OT</span>` : ''}</div></div>`;
+                                }
+                                chips.appendChild(chip);
+                            }
+                            td.appendChild(chips);
+                        }
+                        tr.appendChild(td);
+                    }
+                    tbody.appendChild(tr);
+                }
+            }
 
-          tbody.appendChild(tr);
-        }
-      }
+            function renderDailyTotals() {
+                const tfoot = document.getElementById('totalsFoot');
+                const days = weekDates();
+                const totals = {};
+                for (const d of days) totals[d] = { main: 0, offsite: 0, leave: 0 };
+                const include = new Set(state.people.filter(p => p.count !== false).map(p => p.name));
+                for (const s of state.shifts) {
+                    if (!include.has(s.person)) continue;
+                    if (!totals[s.date]) continue;
+                    if (s.leaveType) totals[s.date].leave++;
+                    else {
+                        const loc = (s.location || '').trim();
+                        if (loc === MAIN_LOCATION || loc === 'Main') totals[s.date].main++;
+                        else totals[s.date].offsite++;
+                    }
+                }
+                const tr = document.createElement('tr');
+                const th = document.createElement('th'); th.textContent = 'Daily totals'; tr.appendChild(th);
+                for (const d of days) {
+                    const td = document.createElement('td');
+                    const t = totals[d];
+                    td.innerHTML = `<div class="totalsBox"><div class="totLine"><span class="totLabel locA">${escapeHtml(MAIN_LOCATION)}</span><span class="mono">${t.main}</span></div><div class="totLine"><span class="totLabel other">Off-site</span><span class="mono">${t.offsite}</span></div><div class="totLine"><span class="totLabel leave">Leave</span><span class="mono">${t.leave}</span></div></div>`;
+                    tr.appendChild(td);
+                }
+                tfoot.innerHTML = ''; tfoot.appendChild(tr);
+            }
 
-      function renderWeeklySummary() {
-        const ws = $("weekStart").value;
-        const we = addDays(ws, 7);
-        const inWeek = (state.shifts || []).filter(s => s.date >= ws && s.date < we);
+            function renderWeeklySummary() {
+                const ws = document.getElementById('weekStart').value;
+                const weekEnd = addDays(ws, 6);
+                const thead = document.getElementById('summary').querySelector('thead');
+                thead.innerHTML = `<tr><th colspan="4" class="summaryWeek">Week: ${formatDdMmm(ws)} – ${formatDdMmm(weekEnd)}</th></tr><tr><th>Employee</th><th>Hours</th><th>Overtime</th><th>Leave days</th></tr>`;
+                const byPerson = new Map();
+                for (const p of state.people) byPerson.set(p.name, { mins: 0, otMins: 0, leaveDays: new Set() });
+                const inWeek = state.shifts.filter(s => s.date >= ws && s.date <= weekEnd);
+                for (const s of inWeek) {
+                    if (!byPerson.has(s.person)) byPerson.set(s.person, { mins: 0, otMins: 0, leaveDays: new Set() });
+                    const rec = byPerson.get(s.person);
+                    if (s.leaveType) rec.leaveDays.add(s.date);
+                    else {
+                        const mins = computeShiftMinutes(s);
+                        rec.mins += mins;
+                        if (s.overtime === 'yes') rec.otMins += mins;
+                    }
+                }
+                const tbody = document.getElementById('summary').querySelector('tbody'); tbody.innerHTML = '';
+                for (const [p, rec] of byPerson.entries()) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${escapeHtml(p)}</td><td class="mono">${(rec.mins / 60).toFixed(2)}</td><td class="mono">${(rec.otMins / 60).toFixed(2)}</td><td class="mono">${rec.leaveDays.size}</td>`;
+                    tbody.appendChild(tr);
+                }
+            }
 
-        const weekEnd = addDays(ws, 6);
-        const thead = $("summary").querySelector("thead");
-        thead.innerHTML = `
-          <tr>
-            <th colspan="4" class="summaryWeek">Week: ${formatDdMmm(ws)} – ${formatDdMmm(weekEnd)}</th>
-          </tr>
-          <tr>
-            <th>Employee</th><th>Hours</th><th>Overtime</th><th>Leave days</th>
-          </tr>
-        `;
+            function renderAll() { renderGrid(); renderDailyTotals(); renderWeeklySummary(); }
 
-        const byPerson = new Map();
-        for (const p of (state.people || [])) byPerson.set(p.name, { mins: 0, otMins: 0, leaveDays: new Set() });
+            async function loadAndRender() {
+                try {
+                    const res = await fetch(PUBLIC_JSON_URL, { cache: 'no-store' });
+                    if (!res.ok) throw new Error('fetch failed ' + res.status);
+                    const data = await res.json();
+                    if (data?.state) state = data.state;
+                } catch (e) {
+                    console.warn('load failed, using empty state', e);
+                }
+                setDefaultDates();
+                updateWeekStartLabel();
+                renderAll();
+            }
 
-        for (const s of inWeek) {
-          if (!byPerson.has(s.person)) byPerson.set(s.person, { mins: 0, otMins: 0, leaveDays: new Set() });
-          const rec = byPerson.get(s.person);
-          if (s.leaveType) rec.leaveDays.add(s.date);
-          else {
-            const mins = computeShiftMinutes(s);
-            rec.mins += mins;
-            if (s.overtime === "yes") rec.otMins += mins;
-          }
-        }
+            function setDefaultDates() { const now = new Date(); const day = now.getDay(); const diffToMon = (day === 0 ? -6 : 1 - day); const mon = new Date(now); mon.setDate(now.getDate() + diffToMon); document.getElementById('weekStart').value = toISODate(mon); }
 
-        const tbody = $("summary").querySelector("tbody");
-        tbody.innerHTML = "";
-        for (const [p, rec] of byPerson.entries()) {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${escapeHtml(p)}</td>
-            <td class="mono">${(rec.mins / 60).toFixed(2)}</td>
-            <td class="mono">${(rec.otMins / 60).toFixed(2)}</td>
-            <td class="mono">${rec.leaveDays.size}</td>
-          `;
-          tbody.appendChild(tr);
-        }
-      }
+            function updateWeekStartLabel() { const ws = document.getElementById('weekStart').value; if (!ws) return; const d = new Date(ws + 'T00:00:00'); const weekday = new Intl.DateTimeFormat('en-NZ', { weekday: 'short' }).format(d); document.getElementById('weekStartLabel').textContent = `Week start (${weekday})`; }
 
-      function renderAll() { renderGrid(); renderDailyTotals(); renderWeeklySummary(); }
+            document.getElementById('prevWeek').addEventListener('click', () => { const ws = document.getElementById('weekStart').value; if (!ws) return; document.getElementById('weekStart').value = addDays(ws, -7); updateWeekStartLabel(); renderAll(); });
+            document.getElementById('nextWeek').addEventListener('click', () => { const ws = document.getElementById('weekStart').value; if (!ws) return; document.getElementById('weekStart').value = addDays(ws, 7); updateWeekStartLabel(); renderAll(); });
+            document.getElementById('weekStart').addEventListener('change', () => { updateWeekStartLabel(); renderAll(); });
 
-      async function loadPublic() {
-        const res = await fetch(PUBLIC_JSON_URL, { cache: "no-store" });
-        if (!res.ok) throw new Error(`Failed to load roster.json: HTTP ${res.status}`);
-        const data = await res.json();
-        const first = data?.team?.[0];
-        if (!first?.state) throw new Error("Invalid roster.json: missing team[0].state");
-        state = first.state;
-        if (first.weekStart) $("weekStart").value = first.weekStart;
-      }
-
-      function jumpWeek(deltaWeeks) {
-        const ws = $("weekStart").value;
-        if (!ws) return;
-        $("weekStart").value = addDays(ws, deltaWeeks * 7);
-        renderAll();
-      }
-
-      $("weekStart").addEventListener("change", renderAll);
-      $("prevWeek").addEventListener("click", () => jumpWeek(-1));
-      $("nextWeek").addEventListener("click", () => jumpWeek(1));
-
-      // Init
-      setDefaultDates();
-      (async () => {
-        try { await loadPublic(); } catch (e) { console.warn(e); }
-        renderAll();
-      })();
-    })();
-  </script>
+            loadAndRender();
+        })();
+    </script>
 </body>
 
 </html>
