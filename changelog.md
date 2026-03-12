@@ -1,5 +1,8 @@
 # Changelog | Jesse's Toolkit
 ## 3.1
+*2026-03-12*
+- Updated: Added 'IFP attached' question to Siebel Discount template
+
 *2026-02-27*
 - Added: GM% to KPI table
 
