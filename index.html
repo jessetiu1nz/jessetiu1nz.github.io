@@ -1231,6 +1231,15 @@ Notes:
                         </td>
                     </tr>
                     <tr>
+                        <td>IFP attached:</td>
+                        <td>
+                            <label for="siebeldisc_ifpyes"><input type="radio" name="siebeldisc_ifp"
+                                    id="siebeldisc_ifpyes" onclick="siebeldisc_textUpdate()" value="Y">Yes</label>
+                            <label for="siebeldisc_ifpno"><input type="radio" name="siebeldisc_ifp"
+                                    id="siebeldisc_ifpno" onclick="siebeldisc_textUpdate()" value="N">No</label>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>Discount reason:</td>
                         <td><input type="text" oninput="siebeldisc_textUpdate()" id="siebeldisc_reason" size="50"></td>
                     </tr>
@@ -1247,6 +1256,7 @@ Notes:
 ID type:
 Plan/term/cost:
 Plan discount amount/term:
+IFP attached:
 Discount reason:
 Biometrics Transaction ID:
                             </textarea><br>
@@ -1640,21 +1650,21 @@ Biometrics Transaction ID:
                 prontodisc_competitor.hidden = true;
             }
 
-            let units = document.querySelector("input[name='prontodisc_units']:checked");
+            let units = document.querySelector("input[name='prontodisc_units']:checked") ? document.querySelector("input[name='prontodisc_units']:checked").value : null;
             let discountamount = "";
-            if (units && units.value == "dollars") discountamount = `$${prontodisc_discount.value}`;
-            else if (units && units.value == "percent") discountamount = `${prontodisc_discount.value}%`;
+            if (units == "dollars") discountamount = `$${prontodisc_discount.value}`;
+            else if (units == "percent") discountamount = `${prontodisc_discount.value}%`;
             else valid = false;
 
-            let approver = document.querySelector("input[name='prontodisc_approver']:checked");
+            let approver = document.querySelector("input[name='prontodisc_approver']:checked") ? document.querySelector("input[name='prontodisc_approver']:checked").value : null;
             let approved = "";
-            if (approver && approver.value == "retaillead") approved = "\nApproval: Retail Lead";
-            else if (approver && approver.value == "arealead") approved = "\nApproval: Area Lead";
+            if (approver == "retaillead") approved = "\nApproval: Retail Lead";
+            else if (approver == "arealead") approved = "\nApproval: Area Lead";
 
             prontodisc_textbox.value = `Type: ${type}\nReason: ${prontodisc_reason.value}${competitor}\nDiscount & Final Price: ${discountamount} off -> $${prontodisc_final.value}${approved}\nNotes: ${prontodisc_notes.value}`;
             if (type == "" || prontodisc_reason.value == "" || prontodisc_discount.value == "" || prontodisc_final.value == "" || prontodisc_notes.value == "") valid = false;
-            if (units && units.value == "dollars" && prontodisc_discount.value > 30 && approved == "") valid = false;
-            if (units && units.value == "percent" && prontodisc_discount.value > 100) valid = false;
+            if (units == "dollars" && prontodisc_discount.value > 30 && approved == "") valid = false;
+            if (units == "percent" && prontodisc_discount.value > 100) valid = false;
             prontodisc_copybutton.disabled = !valid;
         }
 
@@ -1664,13 +1674,14 @@ Biometrics Transaction ID:
 
         function siebeldisc_textUpdate() {
             let text = "";
-            let id = document.querySelector("input[name='siebeldisc_idtype']:checked");
-            if (id && id.value != "None") text += `ID type: ${id.value}\n`;
-            text += `Plan/term/cost: ${siebeldisc_plan.value}, ${siebeldisc_term.value}, ${siebeldisc_cost.value}\nPlan discount amount/term: ${siebeldisc_damount.value}, ${siebeldisc_dterm.value}\nDiscount reason: ${siebeldisc_reason.value}`;
+            let id = document.querySelector("input[name='siebeldisc_idtype']:checked") ? document.querySelector("input[name='siebeldisc_idtype']:checked").value : null;
+            let ifp = document.querySelector("input[name='siebeldisc_ifp']:checked") ? document.querySelector("input[name='siebeldisc_ifp']:checked").value : null;
+            if (id && id != "None") text += `ID type: ${id}\n`;
+            text += `Plan/term/cost: ${siebeldisc_plan.value}, ${siebeldisc_term.value}, ${siebeldisc_cost.value}\nPlan discount amount/term: ${siebeldisc_damount.value}, ${siebeldisc_dterm.value}\nIFP attached: ${ifp}\nDiscount reason: ${siebeldisc_reason.value}`;
             if (!siebeldisc_nobiom.checked) text += `\nBiometrics Transaction ID: ${siebeldisc_biometrics.value}`;
             siebeldisc_textbox.value = text;
             let valid = true;
-            if (!id || siebeldisc_plan.value == "" || siebeldisc_term.value == "" || siebeldisc_cost.value == "" || siebeldisc_damount.value == "" || siebeldisc_dterm.value == "" || siebeldisc_reason.value == "" || (!siebeldisc_nobiom.checked && siebeldisc_biometrics.value == "")) valid = false;
+            if (!id || siebeldisc_plan.value == "" || siebeldisc_term.value == "" || siebeldisc_cost.value == "" || siebeldisc_damount.value == "" || siebeldisc_dterm.value == "" || !ifp || siebeldisc_reason.value == "" || (!siebeldisc_nobiom.checked && siebeldisc_biometrics.value == "")) valid = false;
             siebeldisc_copybutton.disabled = !valid;
         }
     </script>
