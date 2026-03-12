@@ -60,7 +60,8 @@
             box-sizing: border-box;
         }
 
-        :root {
+        :root,
+        .inputTextarea {
             font-family: Euclid Circular, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
             color: var(--text);
             -webkit-font-smoothing: antialiased;
@@ -1049,7 +1050,8 @@ Approved by:
                     </tr>
                     <tr>
                         <td>Reason for credit:</td>
-                        <td><input type="text" oninput="sr_textUpdate()" id="sr_reason"></td>
+                        <td><textarea class="inputTextarea" rows="6" oninput="sr_textUpdate()"
+                                id="sr_reason"></textarea></td>
                     </tr>
 
                     <tr>
@@ -1142,7 +1144,8 @@ Reason for credit:
                     </tr>
                     <tr>
                         <td>Notes:</td>
-                        <td><input type="text" oninput="prontodisc_textUpdate()" id="prontodisc_notes" size="60"></td>
+                        <td><textarea class="inputTextarea" rows="6" oninput="prontodisc_textUpdate()"
+                                id="prontodisc_notes"></textarea></td>
                     </tr>
 
                     <tr>
