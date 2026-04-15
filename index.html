@@ -194,7 +194,8 @@
         #sr,
         #prontodisc,
         #siebeldisc,
-        #kpi {
+        #kpi,
+        #onewallet {
             width: 100%;
             max-width: 100%;
             background: var(--surface);
@@ -249,7 +250,8 @@
         #simswap table,
         #sr table,
         #prontodisc table,
-        #siebeldisc table {
+        #siebeldisc table,
+        #onewallet table {
             border-collapse: separate;
         }
 
@@ -257,7 +259,8 @@
         #sr td,
         #prontodisc td,
         #siebeldisc td,
-        #kpi td {
+        #kpi td,
+        #onewallet td {
             padding: 6px 8px;
         }
 
@@ -333,7 +336,8 @@
         #copytext,
         #sr_copybutton,
         #prontodisc_copybutton,
-        #siebeldisc_copybutton {
+        #siebeldisc_copybutton,
+        #onewallet_copybutton {
             margin-top: 10px;
         }
 
@@ -836,6 +840,7 @@
                 <button data-mode="prontodisc" onclick="changeMode('prontodisc')">Pronto Discounts</button>
                 <button data-mode="siebeldisc" onclick="changeMode('siebeldisc')">Siebel Discounts</button>
                 <button data-mode="kpi" onclick="changeMode('kpi')">KPI Report</button>
+                <button data-mode="onewallet" onclick="changeMode('onewallet')">One Wallet</button>
             </p>
         </div>
         <section>
@@ -1311,13 +1316,76 @@ Biometrics Transaction ID:
                     <p id="copyright" hidden>Jesse's Toolkit <span class="version"></span></p>
                 </div>
             </div>
+            <div id="onewallet" hidden>
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <a style="float: right;"
+                                href="https://k-hub.vodafone.nz/one-wallet-how-to-add-or-extend-an-offer"
+                                target="_blank">K-hub link</a>
+                            <h2>Add One Wallet dollars</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Transferee Wallet ID:</td>
+                        <td><input type="text" oninput="onewallet_textUpdate()" id="onewallet_transferee">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Transferee MSISDN:</td>
+                        <td><input type="text" oninput="onewallet_textUpdate()" id="onewallet_transfereeMSISDN"
+                                style="width: 150px;"></td>
+                    </tr>
+                    <tr>
+                        <td>Has the customer received Toolkit Wallet Dollars in the last 24 months?</td>
+                        <td><label for="onewallet_toolkitusedY"><input type="radio" name="onewallet_toolkitused"
+                                    id="onewallet_toolkitusedY" onclick="onewallet_textUpdate()" value="Y">Yes</label>
+                            <label for="onewallet_toolkitusedN"><input type="radio" name="onewallet_toolkitused"
+                                    id="onewallet_toolkitusedN" onclick="onewallet_textUpdate()" value="N">No</label>
+                        </td>
+                    </tr>
+                    <tr id="onewallet_justificationField" hidden>
+                        <td>Justification for applying an additional offer:</td>
+                        <td><input type="text" oninput="onewallet_textUpdate()" id="onewallet_justification">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Offer applied:</td>
+                        <td><input type="text" oninput="onewallet_textUpdate()" id="onewallet_offer"></td>
+                    </tr>
+                    <tr>
+                        <td>Reason / business justification:</td>
+                        <td><textarea class="inputTextarea" oninput="onewallet_textUpdate()" id="onewallet_reason"
+                                rows="5" cols="60"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><textarea disabled id="onewallet_textbox" rows="10" cols="80">
+Transferee Wallet ID (if applicable - MSISDN):
+Has the customer received Toolkit Wallet Dollars in the last 24 months?
+Offer applied:
+Reason / business justification:
+                                        </textarea><br>
+                            <div class="helperline"><span id="onewallet_warning"><i>One Wallet offers can only be
+                                        manually added by leads or approved persons.</i></span></div>
+                            <button id="onewallet_copybutton" class="copy-btn has-tooltip"
+                                data-tooltip="Copy text to clipboard"
+                                onclick="copy2clipboard(onewallet_textbox.value, this)" disabled>
+                                Copy to clipboard
+                            </button>
+                            <button class="copy-btn" onclick="clearForm('onewallet')">
+                                Clear fields
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </section>
         <footer>Created by Jesse Tiu 2025-2026. <a href="mailto:jesse.tiu@one.nz">jesse.tiu@one.nz</a></footer>
     </div>
     <script> // General
 
         // Version Info
-        const version = "v3.1";
+        const version = "v3.2";
         const versionElements = document.getElementsByClassName("version");
         for (let i = 0; i < versionElements.length; i++) {
             const v = document.createTextNode(version);
@@ -1331,6 +1399,7 @@ Biometrics Transaction ID:
             document.getElementById("kpi").hidden = (mode != 'kpi');
             document.getElementById("prontodisc").hidden = (mode != 'prontodisc');
             document.getElementById("siebeldisc").hidden = (mode != 'siebeldisc');
+            document.getElementById("onewallet").hidden = (mode != 'onewallet');
         }
 
         function showCopiedState(btn, label = "Copied ✓") {
@@ -1398,6 +1467,7 @@ Biometrics Transaction ID:
 
             if (sectionId === "prontodisc") prontodisc_textUpdate();
             if (sectionId === "siebeldisc") siebeldisc_textUpdate();
+            if (sectionId === "onewallet") onewallet_textUpdate();
         }
 
         function setActiveTab(mode) {
@@ -1687,6 +1757,52 @@ Biometrics Transaction ID:
             if (!id || siebeldisc_plan.value == "" || siebeldisc_term.value == "" || siebeldisc_cost.value == "" || siebeldisc_damount.value == "" || siebeldisc_dterm.value == "" || !ifp || siebeldisc_reason.value == "" || (!siebeldisc_nobiom.checked && siebeldisc_biometrics.value == "")) valid = false;
             siebeldisc_copybutton.disabled = !valid;
         }
+    </script>
+    <script> // Adding One Wallet dollars
+        //--------------------------------------------------------------------------------------------------
+
+        function onewallet_textUpdate() {
+            let valid = true;
+            let connector = "";
+            if (onewallet_transferee && onewallet_transferee.value &&
+                onewallet_transfereeMSISDN && onewallet_transfereeMSISDN.value) {
+                connector = " - ";
+            }
+            const onewallet_toolkitused = document.querySelector("input[name='onewallet_toolkitused']:checked");
+            let toolkitused = "";
+            let justification = "";
+            if (onewallet_toolkitused) {
+                toolkitused = onewallet_toolkitused.value;
+                if (toolkitused == "N") {
+                    onewallet_justificationField.hidden = true;
+                    justification = "";
+                } else {
+                    onewallet_justificationField.hidden = false;
+                    justification = `\nJustification for applying an additional Toolkit offer: ${onewallet_justification.value}`;
+                }
+            }
+            // let competitor = "";
+            // if (type == "Price Match") {
+            //     prontodisc_competitor.hidden = false;
+            //     competitor = `\nCompetitor & Price: ${prontodisc_competitorname.value}, $${prontodisc_competitorprice.value}`;
+            //     if (prontodisc_competitorname.value == "" || prontodisc_competitorprice.value == "") valid = false;
+            // } else {
+            //     prontodisc_competitor.hidden = true;
+            // }
+
+            onewallet_textbox.value = `Transferee Wallet ID (if applicable - MSISDN): ${onewallet_transferee.value}${connector}${onewallet_transfereeMSISDN.value}\nHas the customer received Toolkit Wallet Dollars in the last 24 months? ${toolkitused}${justification}\nOffer applied: ${onewallet_offer.value}\nReason / business justification: ${onewallet_reason.value}`;
+
+            if (onewallet_transferee.value == "" && onewallet_transfereeMSISDN.value == "") valid = false;
+            if (toolkitused == "") valid = false;
+            if (toolkitused == "Y" && onewallet_justification.value == "") valid = false;
+            if (onewallet_offer.value == "" || onewallet_reason.value == "") valid = false;
+            onewallet_copybutton.disabled = !valid;
+            // if (type == "" || prontodisc_reason.value == "" || prontodisc_discount.value == "" || prontodisc_final.value == "" || prontodisc_notes.value == "") valid = false;
+            // if (units == "dollars" && prontodisc_discount.value > 30 && approved == "") valid = false;
+            // if (units == "percent" && prontodisc_discount.value > 100) valid = false;
+            // prontodisc_copybutton.disabled = !valid;
+        }
+
     </script>
     <script> // KPI Tracker Report
         // ------------------------------------------------------------------------------------------------------------------------------
