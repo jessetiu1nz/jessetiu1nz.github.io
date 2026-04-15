@@ -1,4 +1,8 @@
 # Changelog | Jesse's Toolkit
+## 3.2
+*2026-04-15*
+- Added: One Wallet template (for adding OW dollars)
+
 ## 3.1
 *2026-03-13*
 - Updated: Increased heights for SR 'Reason for credit' and Pronto Disc 'Notes' input fields
