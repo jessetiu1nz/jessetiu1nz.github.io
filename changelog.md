@@ -1,5 +1,8 @@
 # Changelog | Jesse's Toolkit
 ## 3.2
+*2026-07-08*
+- Bug fixed: "Commissions don't include devices"
+
 *2026-04-15*
 - Added: One Wallet template (for adding OW dollars)
 
